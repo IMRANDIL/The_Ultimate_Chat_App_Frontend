@@ -1,12 +1,16 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { login } from "../services/api";
+import { useDispatch } from "react-redux";
+import { loginAsync } from "../redux/authSlice";
 import fallbackImg from "../assets/fallback.jpg";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const dispatch: any = useDispatch();
+  // const error = useSelector((state: RootState) => state.auth.error);
 
   const navigate = useNavigate();
 
@@ -22,23 +26,12 @@ const LoginScreen: React.FC = () => {
     e.preventDefault();
     // Handle form submission logic
     try {
-      const response = await login(email, password);
-      if (
-        response.data &&
-        response.statusText === "OK" &&
-        response.status === 200
-      ) {
-        toast.success("Login Successful");
-        navigate("/", { replace: true });
-      }
+      await dispatch(loginAsync({ email, password }));
+      toast.success("Login Successful");
+      navigate("/", { replace: true });
     } catch (error: any) {
-      if (
-        error.response &&
-        error.response.data &&
-        error.response.data.error &&
-        error.response.data.error.message
-      ) {
-        toast.error(error.response.data.error.message);
+      if (error.message) {
+        toast.error(error.message);
       } else {
         toast.error("An error occurred. Please try again later.");
       }

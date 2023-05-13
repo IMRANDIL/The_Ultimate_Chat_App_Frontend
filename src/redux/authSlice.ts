@@ -1,12 +1,14 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// Import necessary functions from Redux Toolkit
+import {
+  createSlice,
+  createAsyncThunk,
+  combineReducers,
+} from "@reduxjs/toolkit";
 import { login, register } from "../services/api";
 
 interface User {
-  // Define your user object type here
-  // Based on your API response structure
   id: string;
   email: string;
-  // Add more properties as needed
 }
 
 interface AuthState {
@@ -15,14 +17,12 @@ interface AuthState {
   error: string | null | undefined;
 }
 
-// Define your initial state
 const initialState: AuthState = {
   user: null,
   isLoading: false,
   error: null,
 };
 
-// Define an asynchronous thunk for login
 export const loginAsync = createAsyncThunk(
   "auth/login",
   async ({ email, password }: { email: string; password: string }) => {
@@ -31,7 +31,6 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
-// Define an asynchronous thunk for register
 export const registerAsync = createAsyncThunk(
   "auth/register",
   async ({
@@ -48,13 +47,19 @@ export const registerAsync = createAsyncThunk(
   }
 );
 
-// Create the auth slice with reducers and extraReducers
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      state.error = null;
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
-    // Add reducer cases for loginAsync
     builder
       .addCase(loginAsync.pending, (state) => {
         state.isLoading = true;
@@ -67,10 +72,7 @@ const authSlice = createSlice({
       .addCase(loginAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message ?? null;
-      });
-
-    // Add reducer cases for registerAsync
-    builder
+      })
       .addCase(registerAsync.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -86,4 +88,12 @@ const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export const { logout, clearError } = authSlice.actions;
+
+const rootReducer = combineReducers({
+  auth: authSlice.reducer,
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
+
+export default rootReducer;
