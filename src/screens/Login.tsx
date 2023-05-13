@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { login } from "../services/api";
+import fallbackImg from "../assets/fallback.jpg";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -53,6 +54,9 @@ const LoginScreen: React.FC = () => {
             alt="Logo"
             className="w-32 h-32 rounded-full mx-auto border-4 border-gray-300"
             draggable={false}
+            onError={(e) => {
+              e.currentTarget.src = `${fallbackImg}`; // Replace with the fallback image URL
+            }}
           />
           <h1 className="text-2xl font-bold mt-2">Login</h1>
         </div>
