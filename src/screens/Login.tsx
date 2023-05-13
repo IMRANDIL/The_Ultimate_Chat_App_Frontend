@@ -1,9 +1,13 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { login } from "../services/api";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -13,9 +17,31 @@ const LoginScreen: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission logic
+    try {
+      const response = await login(email, password);
+      if (
+        response.data &&
+        response.statusText === "OK" &&
+        response.status === 200
+      ) {
+        toast.success("Login Successful");
+        navigate("/", { replace: true });
+      }
+    } catch (error: any) {
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.error &&
+        error.response.data.error.message
+      ) {
+        toast.error(error.response.data.error.message);
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
+    }
   };
 
   return (
