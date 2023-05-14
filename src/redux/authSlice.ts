@@ -8,6 +8,9 @@ import { login } from "../services/api";
 interface User {
   id: string;
   email: string;
+  username: string;
+  refreshToken: string;
+  accessToken: string;
 }
 
 interface AuthState {
@@ -54,12 +57,10 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
         state.user = action.payload;
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.isLoading = false;
-        console.log(action);
         state.error = action.error.message as string;
       });
   },

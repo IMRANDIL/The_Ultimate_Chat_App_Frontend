@@ -2,8 +2,9 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAsync } from "../redux/authSlice";
+import { RootState, loginAsync } from "../redux/authSlice";
 import fallbackImg from "../assets/fallback.jpg";
+import Loader from "../components/Loader";
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ const LoginScreen: React.FC = () => {
 
   const dispatch: any = useDispatch();
 
-  // const { user, error } = useSelector((state: RootState) => state.auth);
+  const { isLoading } = useSelector((state: RootState) => state.auth.auth);
 
   const navigate = useNavigate();
 
@@ -34,7 +35,9 @@ const LoginScreen: React.FC = () => {
         response.payload.email &&
         response.payload.username
       ) {
-        localStorage.setItem("userInfo", response.payload);
+        const userInfoString = JSON.stringify(response.payload);
+
+        localStorage.setItem("userInfo", userInfoString);
         toast.success("Login successful");
         navigate("/");
       } else {
@@ -47,6 +50,7 @@ const LoginScreen: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+      {isLoading && <Loader />}
       <div className="w-full sm:max-w-md bg-white p-6 rounded-md shadow">
         <div className="relative flex flex-col items-center mb-4">
           <img
