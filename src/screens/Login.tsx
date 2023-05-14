@@ -35,9 +35,6 @@ const LoginScreen: React.FC = () => {
         response.payload.email &&
         response.payload.username
       ) {
-        const userInfoString = JSON.stringify(response.payload);
-
-        localStorage.setItem("userInfo", userInfoString);
         toast.success("Login successful");
         navigate("/");
       } else {

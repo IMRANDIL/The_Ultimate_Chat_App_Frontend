@@ -1,28 +1,34 @@
 import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState, loginAsync } from "../redux/authSlice";
+import { useDispatch } from "react-redux";
+
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/authSlice";
+// import Loader from "../components/Loader";
 
 const Home: React.FC = () => {
-  const user = useSelector((state: RootState) => state.auth.auth.user);
-  const isLoading = useSelector(
-    (state: RootState) => state.auth.auth.isLoading
-  );
+  //   const user = useSelector((state: RootState) => state.auth.auth.user);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("userInfo"); // Remove user info from localStorage
     navigate("/login", { replace: true });
   };
 
+  useEffect(() => {
+    if (!userInfo) {
+      dispatch(logout());
+      navigate("/login", { replace: true });
+    }
+  }, [userInfo]);
+
   return (
     <div>
-      {user && !isLoading && (
+      {userInfo && (
         <div>
-          <h1>Welcome, {user.username}</h1>
-          <p>Email: {user.email}</p>
+          <h1>Welcome, {userInfo.username}</h1>
+          <p>Email: {userInfo.email}</p>
           <button onClick={handleLogout}>Logout</button>
         </div>
       )}

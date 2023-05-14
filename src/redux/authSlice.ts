@@ -44,6 +44,7 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.error = null;
+      localStorage.removeItem("userInfo");
     },
     clearError: (state) => {
       state.error = null;
@@ -58,6 +59,7 @@ const authSlice = createSlice({
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
+        localStorage.setItem("userInfo", JSON.stringify(action.payload));
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.isLoading = false;
