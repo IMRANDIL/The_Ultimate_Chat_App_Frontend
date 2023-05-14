@@ -77,12 +77,12 @@ const Home: React.FC = () => {
           </div>
         </div>
         <div className="flex-grow flex flex-col">
-          <div className="flex-grow">
+          <div className="overflow-y-auto flex-grow">
             <h1 className="text-2xl font-bold mb-4">
               Welcome, {userInfo && userInfo.username}
             </h1>
             <p className="mb-4">Email: {userInfo && userInfo.email}</p>
-            <div className="flex flex-col flex-grow">
+            <div className="flex flex-col">
               {/* Render chat messages here */}
               {chatMessages.map((msg, index) => (
                 <p key={index} className="mb-2">
