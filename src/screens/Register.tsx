@@ -1,12 +1,21 @@
 import React, { useState, ChangeEvent, FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import fallbackImg from "../assets/fallback.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, registerAsync } from "../redux/authSlice";
+import Loader from "../components/Loader";
+import { toast } from "react-toastify";
 
 const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
 
+  const dispatch: any = useDispatch();
+
+  const { isLoading } = useSelector((state: RootState) => state.auth.auth);
+
+  const navigate = useNavigate();
   const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
@@ -19,13 +28,27 @@ const RegisterScreen: React.FC = () => {
     setUsername(e.target.value);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission logic
+    try {
+      const response = await dispatch(
+        registerAsync({ email, password, username })
+      );
+      if (response && response.payload) {
+        toast.success("Registration successful");
+        navigate("/login");
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
+      {isLoading && <Loader />}
       <div className="w-full sm:max-w-md bg-white p-6 rounded-md shadow">
         <div className="relative flex flex-col items-center mb-4">
           <img

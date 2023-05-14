@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { login } from "../services/api";
+import { login, register } from "../services/api";
 
 interface User {
   id: string;
@@ -37,6 +37,26 @@ export const loginAsync = createAsyncThunk(
   }
 );
 
+export const registerAsync = createAsyncThunk(
+  "auth/register",
+  async ({
+    email,
+    password,
+    username,
+  }: {
+    email: string;
+    password: string;
+    username: string;
+  }) => {
+    try {
+      const response = await register(email, password, username);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -62,6 +82,20 @@ const authSlice = createSlice({
         localStorage.setItem("userInfo", JSON.stringify(action.payload));
       })
       .addCase(loginAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(registerAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(registerAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(registerAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
