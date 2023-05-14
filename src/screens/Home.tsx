@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/authSlice";
 
@@ -8,9 +8,11 @@ const Home: React.FC = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [showLogout, setShowLogout] = useState(false);
+  // const [showLogout, setShowLogout] = useState(false);
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [showLogout, setShowLogout] = useState(false);
+  const userListRef = useRef(null);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -24,9 +26,9 @@ const Home: React.FC = () => {
     }
   }, [dispatch, navigate, userInfo]);
 
-  const toggleLogout = () => {
-    setShowLogout((prevState) => !prevState);
-  };
+  // const toggleLogout = () => {
+  //   setShowLogout((prevState) => !prevState);
+  // };
 
   const handleSendMessage = () => {
     if (message.trim() !== "") {
@@ -35,78 +37,77 @@ const Home: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userListRef.current && !userListRef.current.contains(event.target)) {
+        setShowLogout(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="flex h-screen">
-      <div className="w-1/4 bg-gray-200 p-4">
-        <h1 className="text-2xl font-bold mb-4">Chat App</h1>
-        <h2 className="text-xl font-bold mb-2">User List</h2>
-        {/* Render user list here */}
-      </div>
-      <div className="flex-grow bg-white p-4 flex flex-col">
-        <div className="flex justify-end">
-          <div
-            className="relative"
-            onClick={toggleLogout}
-            onBlur={() => setShowLogout(false)}
-            tabIndex={0}
-          >
-            <div className="w-16 h-16 rounded-full bg-blue-500 flex items-center justify-center cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8 text-white"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M5 5a5 5 0 110 10A5 5 0 015 5zm1.49 5.12a.75.75 0 010-1.49h5.26a.75.75 0 010 1.49H6.49zM10 2.75a7.25 7.25 0 110 14.5A7.25 7.25 0 0110 2.75zm0 1.5a5.75 5.75 0 100 11.5A5.75 5.75 0 0010 4.25z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
-            {showLogout && (
-              <div className="absolute top-full right-0 mt-2 bg-white w-36 rounded shadow-lg">
-                <button
-                  className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-          </div>
+      <div className="w-1/6 bg-gray-200 p-4 relative">
+        <div
+          className="w-20 h-20 bg-gray-500 rounded-full cursor-pointer absolute left-1/2 transform -translate-x-1/2  flex items-center justify-center"
+          onClick={() => setShowLogout((showLogout) => !showLogout)}
+        >
+          <img
+            src="https://media.giphy.com/media/UrzZ4TmQK17yJpYPIL/giphy.gif"
+            alt="Logout"
+            className="w-full h-full object-cover rounded-full"
+          />
         </div>
-        <div className="flex-grow flex flex-col">
-          <div className="overflow-y-auto flex-grow">
-            <h1 className="text-2xl font-bold mb-4">
-              Welcome, {userInfo && userInfo.username}
-            </h1>
-            <p className="mb-4">Email: {userInfo && userInfo.email}</p>
-            <div className="flex flex-col">
-              {/* Render chat messages here */}
-              {chatMessages.map((msg, index) => (
-                <p key={index} className="mb-2">
-                  {msg}
-                </p>
-              ))}
-            </div>
-          </div>
-          <div className="mt-4">
-            <div className="flex justify-center">
-              <input
-                type="text"
-                className="border border-gray-400 px-4 py-2 rounded w-3/4"
-                placeholder="Enter your message"
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-              />
+
+        {/* <h1 className="text-2xl font-bold mb-4">Chat App</h1>
+        <h2 className="text-xl font-bold mb-2">User List</h2> */}
+        {/* Render user list here */}
+        <div className="relative" ref={userListRef}>
+          {showLogout && (
+            <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-md shadow-lg">
               <button
-                className="bg-blue-500 text-white px-4 py-2 rounded ml-2"
-                onClick={handleSendMessage}
+                className="block w-full py-2 px-4 text-left text-gray-800 hover:bg-gray-100"
+                onClick={handleLogout}
               >
-                Send
+                Logout
               </button>
             </div>
+          )}
+        </div>
+      </div>
+
+      <div className="flex-1 bg-white p-4 relative">
+        {/* Chat window */}
+        <div className="chat-window h-full border rounded-lg overflow-y-auto">
+          {/* Render chat messages here */}
+          {chatMessages.map((message, index) => (
+            <div key={index} className="p-5 m-5 border flex-1">
+              <p className="text-gray-800">{message}</p>
+            </div>
+          ))}
+        </div>
+        {/* Input field */}
+        <div className="absolute inset-x-0 mx-auto bottom-10  w-4/5">
+          <div className="flex items-center mt-4">
+            <input
+              type="text"
+              placeholder="Type a message..."
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="flex-1 border border-gray-300 rounded-md px-4 py-3 focus:outline-none focus:ring focus:border-blue-500"
+            />
+            <button
+              className="ml-2 bg-blue-500 text-white px-9 py-3 rounded-md"
+              onClick={handleSendMessage}
+            >
+              Send
+            </button>
           </div>
         </div>
       </div>
