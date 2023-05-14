@@ -8,13 +8,30 @@ const axiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
-// Define your API endpoints and corresponding functions
-export const login = (email: string, password: string) => {
-  return axiosInstance.post("/login", { email, password });
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await axiosInstance.post("/login", { email, password });
+    return response.data;
+  } catch (error: any) {
+    throw error.response.data.error;
+  }
 };
 
-export const register = (email: string, password: string, username: string) => {
-  return axiosInstance.post("/signup", { email, password, username });
+export const register = async (
+  email: string,
+  password: string,
+  username: string
+) => {
+  try {
+    const response = await axiosInstance.post("/signup", {
+      email,
+      password,
+      username,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response.data.error;
+  }
 };
 
 // You can add more API functions here as needed

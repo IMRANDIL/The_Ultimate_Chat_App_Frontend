@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../redux/authSlice";
+=======
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, loginAsync } from "../redux/authSlice";
+>>>>>>> d08b423 (yes)
 import fallbackImg from "../assets/fallback.jpg";
 
 const LoginScreen: React.FC = () => {
@@ -10,7 +18,11 @@ const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState("");
 
   const dispatch: any = useDispatch();
+<<<<<<< HEAD
   // const error = useSelector((state: RootState) => state.auth.error);
+=======
+  // const { user, error } = useSelector((state: RootState) => state.auth);
+>>>>>>> d08b423 (yes)
 
   const navigate = useNavigate();
 
@@ -26,15 +38,21 @@ const LoginScreen: React.FC = () => {
     e.preventDefault();
     // Handle form submission logic
     try {
-      await dispatch(loginAsync({ email, password }));
-      toast.success("Login Successful");
-      navigate("/", { replace: true });
-    } catch (error: any) {
-      if (error.message) {
-        toast.error(error.message);
+      const response = await dispatch(loginAsync({ email, password }));
+      if (
+        response &&
+        response.payload &&
+        response.payload.email &&
+        response.payload.username
+      ) {
+        localStorage.setItem("userInfo", response.payload);
+        toast.success("Login successful");
+        navigate("/");
       } else {
-        toast.error("An error occurred. Please try again later.");
+        toast.error(response.error.message);
       }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

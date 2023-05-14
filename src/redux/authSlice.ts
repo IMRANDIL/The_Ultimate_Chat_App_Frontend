@@ -1,10 +1,9 @@
-// Import necessary functions from Redux Toolkit
 import {
   createSlice,
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { login, register } from "../services/api";
+import { login } from "../services/api";
 
 interface User {
   id: string;
@@ -14,7 +13,7 @@ interface User {
 interface AuthState {
   user: User | null;
   isLoading: boolean;
-  error: string | null | undefined;
+  error: string | null;
 }
 
 const initialState: AuthState = {
@@ -26,24 +25,12 @@ const initialState: AuthState = {
 export const loginAsync = createAsyncThunk(
   "auth/login",
   async ({ email, password }: { email: string; password: string }) => {
-    const response = await login(email, password);
-    return response.data;
-  }
-);
-
-export const registerAsync = createAsyncThunk(
-  "auth/register",
-  async ({
-    email,
-    password,
-    username,
-  }: {
-    email: string;
-    password: string;
-    username: string;
-  }) => {
-    const response = await register(email, password, username);
-    return response.data;
+    try {
+      const response = await login(email, password);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
   }
 );
 
@@ -67,23 +54,13 @@ const authSlice = createSlice({
       })
       .addCase(loginAsync.fulfilled, (state, action) => {
         state.isLoading = false;
+        console.log(action.payload);
         state.user = action.payload;
       })
       .addCase(loginAsync.rejected, (state, action) => {
         state.isLoading = false;
-        state.error = action.error.message ?? null;
-      })
-      .addCase(registerAsync.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
-      })
-      .addCase(registerAsync.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.user = action.payload;
-      })
-      .addCase(registerAsync.rejected, (state, action) => {
-        state.isLoading = false;
-        state.error = action.error.message ?? null;
+        console.log(action);
+        state.error = action.error.message as string;
       });
   },
 });
