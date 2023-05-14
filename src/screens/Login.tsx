@@ -1,16 +1,14 @@
-<<<<<<< HEAD
 import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { loginAsync } from "../redux/authSlice";
-=======
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+
+import React, { useState, ChangeEvent, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, loginAsync } from "../redux/authSlice";
->>>>>>> d08b423 (yes)
+import { loginAsync } from "../redux/authSlice";
 import fallbackImg from "../assets/fallback.jpg";
 
 const LoginScreen: React.FC = () => {
@@ -18,11 +16,8 @@ const LoginScreen: React.FC = () => {
   const [password, setPassword] = useState("");
 
   const dispatch: any = useDispatch();
-<<<<<<< HEAD
-  // const error = useSelector((state: RootState) => state.auth.error);
-=======
+
   // const { user, error } = useSelector((state: RootState) => state.auth);
->>>>>>> d08b423 (yes)
 
   const navigate = useNavigate();
 
