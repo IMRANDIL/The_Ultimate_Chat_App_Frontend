@@ -46,7 +46,7 @@ const App: React.FC = () => {
 const PrivateHandler: React.FC = (props: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  if (userInfo) {
+  if (userInfo && userInfo.email) {
     return props.children;
   } else {
     return <Navigate to="/login" />;
