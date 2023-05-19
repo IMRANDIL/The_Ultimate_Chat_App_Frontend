@@ -1,16 +1,22 @@
 import React, { useState } from "react";
 import { validateEmail } from "../utils/utils";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, forgotPasswordAsync } from "../redux/authSlice";
+import Loader from "../components/Loader";
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState("");
 
+  const dispatch: any = useDispatch();
+  const { isLoading } = useSelector((state: RootState) => state.auth.auth);
+  // const navigate = useNavigate()
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const isValidEmail = validateEmail(email);
 
@@ -20,10 +26,21 @@ const ForgotPasswordForm: React.FC = () => {
     // Send a request to the server to initiate the password reset process
     // using the provided email address
     // You can use Axios or any other HTTP library to make the request
+    try {
+      const response = await dispatch(forgotPasswordAsync({ email }));
+      if (response && response.payload) {
+        toast.success("Reset link sent to your email");
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
+      {isLoading && <Loader />}
       <form
         onSubmit={handleSubmit}
         className="max-w-xs mx-auto p-6 bg-white rounded-md shadow-lg flex flex-col items-center"

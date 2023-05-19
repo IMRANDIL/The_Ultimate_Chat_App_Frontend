@@ -17,12 +17,14 @@ interface AuthState {
   user: User | null;
   isLoading: boolean;
   error: string | null;
+  msg?: string | null;
 }
 
 const initialState: AuthState = {
   user: null,
   isLoading: false,
   error: null,
+  msg: null,
 };
 
 export const loginAsync = createAsyncThunk(
@@ -119,7 +121,7 @@ const authSlice = createSlice({
       })
       .addCase(forgotPasswordAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.msg = action.payload;
       })
       .addCase(forgotPasswordAsync.rejected, (state, action) => {
         state.isLoading = false;
