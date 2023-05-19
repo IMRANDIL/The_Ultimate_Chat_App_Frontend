@@ -22,7 +22,7 @@ const ForgotPasswordForm: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-200 to-blue-300">
+    <div className="flex justify-center items-center min-h-screen bg-gray-200">
       <form
         onSubmit={handleSubmit}
         className="max-w-xs mx-auto p-6 bg-white rounded-md shadow-lg flex flex-col items-center"
@@ -43,7 +43,7 @@ const ForgotPasswordForm: React.FC = () => {
             onChange={handleEmailChange}
             placeholder="Enter your email"
             required
-            className="block w-full px-4 py-2 mt-1 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
           />
         </label>
         <button
