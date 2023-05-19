@@ -9,6 +9,7 @@ import {
 import LoginScreen from "./screens/Login";
 import RegisterScreen from "./screens/Register";
 import Home from "./screens/Home";
+import ForgotPasswordForm from "./screens/ForgotPassword";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,15 @@ const App: React.FC = () => {
           element={
             <PublicHandler>
               <RegisterScreen />
+            </PublicHandler>
+          }
+        />
+
+        <Route
+          path="/forgot-password"
+          element={
+            <PublicHandler>
+              <ForgotPasswordForm />
             </PublicHandler>
           }
         />
