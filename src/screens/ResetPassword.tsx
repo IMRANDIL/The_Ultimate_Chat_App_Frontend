@@ -44,14 +44,14 @@ const ResetPasswordForm: React.FC = () => {
       >
         <div className="w-40 h-40 bg-gray-500 rounded-full mb-4">
           <img
-            src="https://media.giphy.com/media/2t9xUdD3SlWIjizUJ7/giphy-downsized-large.gif"
+            src="https://media.giphy.com/media/KMHaS7N7b7r42nPNys/giphy.gif"
             alt="Loading"
             draggable={false}
             className="w-full h-full object-cover rounded-full"
           />
         </div>
 
-        <label className="block mb-2 text-sm font-medium text-gray-700">
+        <label className="block mb-2  font-bold text-gray-700">
           New Password:
           <input
             type="password"
@@ -62,7 +62,7 @@ const ResetPasswordForm: React.FC = () => {
             className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-500"
           />
         </label>
-        <label className="block mb-2 text-sm font-medium text-gray-700">
+        <label className="block mb-2  font-bold text-gray-700">
           Confirm Password:
           <input
             type="password"

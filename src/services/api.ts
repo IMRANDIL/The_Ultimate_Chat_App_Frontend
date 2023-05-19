@@ -36,4 +36,15 @@ export const register = async (
 
 // You can add more API functions here as needed
 
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await axiosInstance.post("/forgot-password", {
+      email,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response.data.error;
+  }
+};
+
 export default axiosInstance;

@@ -10,6 +10,7 @@ import LoginScreen from "./screens/Login";
 import RegisterScreen from "./screens/Register";
 import Home from "./screens/Home";
 import ForgotPasswordForm from "./screens/ForgotPassword";
+import ResetPasswordForm from "./screens/ResetPassword";
 
 const App: React.FC = () => {
   return (
@@ -37,6 +38,15 @@ const App: React.FC = () => {
           element={
             <PublicHandler>
               <ForgotPasswordForm />
+            </PublicHandler>
+          }
+        />
+
+        <Route
+          path="/reset-password"
+          element={
+            <PublicHandler>
+              <ResetPasswordForm />
             </PublicHandler>
           }
         />

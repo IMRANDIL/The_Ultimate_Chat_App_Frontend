@@ -36,8 +36,8 @@ const ForgotPasswordForm: React.FC = () => {
             className="w-full h-full object-cover rounded-full"
           />
         </div>
-        <label className="block mb-2 text-sm font-medium text-gray-700">
-          Email:
+        <label className="block mb-2  font-bold text-gray-700">
+          Email
           <input
             type="email"
             value={email}

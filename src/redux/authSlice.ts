@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { login, register } from "../services/api";
+import { forgotPassword, login, register } from "../services/api";
 
 interface User {
   id: string;
@@ -57,6 +57,18 @@ export const registerAsync = createAsyncThunk(
   }
 );
 
+export const forgotPasswordAsync = createAsyncThunk(
+  "auth/forgotPassword",
+  async ({ email }: { email: string }) => {
+    try {
+      const response = await forgotPassword(email);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -96,6 +108,20 @@ const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(registerAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(forgotPasswordAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(forgotPasswordAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload;
+      })
+      .addCase(forgotPasswordAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
