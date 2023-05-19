@@ -11,7 +11,7 @@ const ForgotPasswordForm: React.FC = () => {
 
   const dispatch: any = useDispatch();
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
-  // const navigate = useNavigate()
+  const navigate = useNavigate();
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
   };
@@ -30,6 +30,7 @@ const ForgotPasswordForm: React.FC = () => {
       const response = await dispatch(forgotPasswordAsync({ email }));
       if (response && response.payload) {
         toast.success("Reset link sent to your email");
+        return navigate("/login");
       } else {
         toast.error(response.error.message);
       }

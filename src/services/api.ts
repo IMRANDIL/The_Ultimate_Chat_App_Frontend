@@ -13,7 +13,7 @@ export const login = async (email: string, password: string) => {
     const response = await axiosInstance.post("/login", { email, password });
     return response.data;
   } catch (error: any) {
-    throw error.response.data.error;
+    throw error.response?.data?.error;
   }
 };
 
@@ -30,7 +30,7 @@ export const register = async (
     });
     return response.data;
   } catch (error: any) {
-    throw error.response.data.error;
+    throw error.response?.data?.error;
   }
 };
 
@@ -43,7 +43,7 @@ export const forgotPassword = async (email: string) => {
     });
     return response.data;
   } catch (error: any) {
-    throw error.response.data.error;
+    throw error.response?.data?.error;
   }
 };
 
