@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { validateEmail } from "../utils/utils";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const ForgotPasswordForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ const ForgotPasswordForm: React.FC = () => {
     const isValidEmail = validateEmail(email);
 
     if (!isValidEmail) {
-      return toast.error("Please enter valid email");
+      return toast.error("Please enter a valid email");
     }
     // Send a request to the server to initiate the password reset process
     // using the provided email address
@@ -52,6 +53,12 @@ const ForgotPasswordForm: React.FC = () => {
         >
           Submit
         </button>
+        <Link
+          to="/login"
+          className="mt-3 text-blue-500 hover:text-blue-700 focus:outline-none"
+        >
+          Back to Login
+        </Link>
       </form>
     </div>
   );

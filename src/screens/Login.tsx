@@ -56,7 +56,7 @@ const LoginScreen: React.FC = () => {
             className="w-32 h-32 rounded-full mx-auto border-4 border-gray-300"
             draggable={false}
             onError={(e) => {
-              e.currentTarget.src = `${fallbackImg}`; // Replace with the fallback image URL
+              e.currentTarget.src = fallbackImg; // Replace with the fallback image URL
             }}
           />
           <h1 className="text-2xl font-bold mt-2">Login</h1>
@@ -101,6 +101,14 @@ const LoginScreen: React.FC = () => {
             Login
           </button>
         </form>
+        <div className="mt-4 text-center">
+          <Link
+            to="/forgot-password"
+            className="text-blue-500 hover:text-blue-700"
+          >
+            Forgot Password?
+          </Link>
+        </div>
         <div className="mt-4 text-center">
           Don't have an account?{" "}
           <Link to="/register" className="text-blue-500 hover:text-blue-700">
