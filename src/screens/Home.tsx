@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllUserAsync, logout } from "../redux/authSlice";
 import { toast } from "react-toastify";
-import { useCookies } from "react-cookie";
 
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -16,9 +15,7 @@ const Home: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const userListRef = useRef(null);
 
-  const [cookies] = useCookies(["accessToken"]);
-
-  const accessToken = cookies.accessToken;
+  const accessToken = userInfo && userInfo.accessToken;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -56,9 +53,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchUserList = async () => {
       try {
-        const response = await dispatch(getAllUserAsync(accessToken));
-        console.log(response);
-
+        const response = await dispatch(getAllUserAsync({ accessToken }));
         if (response && response.payload) {
           setUserList(response.payload.users);
         } else {
@@ -72,9 +67,9 @@ const Home: React.FC = () => {
     fetchUserList();
   }, [dispatch]);
 
-  const filteredUserList = userList.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredUserList = userList.filter((user) =>
+  //   user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <div className="flex h-screen">
@@ -109,11 +104,11 @@ const Home: React.FC = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="mt-28 p-2 border border-gray-300 rounded-md w-full"
         />
-        <ul>
+        {/* <ul>
           {filteredUserList.map((user) => (
             <li key={user.id}>{user.name}</li>
           ))}
-        </ul>
+        </ul> */}
       </div>
 
       <div className="flex-1 bg-white p-4 relative">

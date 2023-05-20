@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useCookies } from "react-cookie";
 // Define your API base URL
 const BASE_URL = "http://localhost:5000/api/v1/user";
 
