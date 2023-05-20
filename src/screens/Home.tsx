@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/authSlice";
+import ChatForm from "../components/ChatForm";
+import MessageContainer from "../components/MessageContainer";
 
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -50,7 +52,7 @@ const Home: React.FC = () => {
           />
         </div>
 
-        <div className="relative" ref={userListRef}>
+        <div ref={userListRef}>
           {showLogout && (
             <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-md shadow-lg">
               <button
@@ -62,7 +64,13 @@ const Home: React.FC = () => {
             </div>
           )}
         </div>
+        {/* create roomlist here */}
       </div>
+      {/* create chat form here */}
+      <div className="relative h-full w-5/6">
+        <ChatForm />
+      </div>
+      {/* put meessge to chatArea */}
     </div>
   );
 };
