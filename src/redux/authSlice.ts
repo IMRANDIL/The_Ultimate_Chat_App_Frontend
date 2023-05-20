@@ -32,7 +32,7 @@ const initialState: AuthState = {
   isLoading: false,
   error: null,
   msg: null,
-  users: [],
+  users: null,
 };
 
 export const loginAsync = createAsyncThunk(
@@ -97,14 +97,19 @@ export const resetPasswordAsync = createAsyncThunk(
   }
 );
 
-export const getAllUserAsync = createAsyncThunk("auth/allUser", async () => {
-  try {
-    const response = await getAllUser();
-    return response;
-  } catch (error: any) {
-    throw error;
+export const getAllUserAsync = createAsyncThunk(
+  "auth/allUser",
+  async ({ accessToken }: { accessToken: string }) => {
+    try {
+      const response = await getAllUser(accessToken);
+      console.log(response);
+
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
   }
-});
+);
 
 const authSlice = createSlice({
   name: "auth",
@@ -184,10 +189,12 @@ const authSlice = createSlice({
       })
       .addCase(getAllUserAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.users?.push(action.payload);
+        console.log(action.payload);
+        state.users = action.payload;
       })
       .addCase(getAllUserAsync.rejected, (state, action) => {
         state.isLoading = false;
+        console.log(action.error);
         state.error = action.error.message as string;
       });
   },

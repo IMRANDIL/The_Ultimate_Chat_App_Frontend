@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../redux/authSlice";
-import axios from "axios";
+import { getAllUserAsync, logout } from "../redux/authSlice";
+import { toast } from "react-toastify";
+import { useCookies } from "react-cookie";
 
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
@@ -15,6 +15,10 @@ const Home: React.FC = () => {
   const [userList, setUserList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const userListRef = useRef(null);
+
+  const [cookies] = useCookies(["accessToken"]);
+
+  const accessToken = cookies.accessToken;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -52,15 +56,21 @@ const Home: React.FC = () => {
   useEffect(() => {
     const fetchUserList = async () => {
       try {
-        const response = await axios.get("/api/users");
-        setUserList(response.data);
-      } catch (error) {
-        console.error("Error fetching user list:", error);
+        const response = await dispatch(getAllUserAsync(accessToken));
+        console.log(response);
+
+        if (response && response.payload) {
+          setUserList(response.payload.users);
+        } else {
+          toast.error(response.error.message);
+        }
+      } catch (error: any) {
+        toast.error(error.message);
       }
     };
 
     fetchUserList();
-  }, []);
+  }, [dispatch]);
 
   const filteredUserList = userList.filter((user) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())

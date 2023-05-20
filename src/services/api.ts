@@ -1,6 +1,5 @@
 import axios from "axios";
-import Cookies from "js-cookie";
-
+import { useCookies } from "react-cookie";
 // Define your API base URL
 const BASE_URL = "http://localhost:5000/api/v1/user";
 
@@ -63,11 +62,11 @@ export const resetPassword = async (
   }
 };
 
-export const getAllUser = async () => {
+export const getAllUser = async (accessToken: string) => {
   try {
     const response = await axiosInstance.get(`/allUser`, {
       headers: {
-        Authorization: `Bearer ${Cookies.get("accessToken")}`,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     return response.data;
@@ -75,5 +74,4 @@ export const getAllUser = async () => {
     throw error.response?.data?.error;
   }
 };
-
 export default axiosInstance;
