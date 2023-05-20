@@ -47,4 +47,18 @@ export const forgotPassword = async (email: string) => {
   }
 };
 
+export const resetPassword = async (
+  newPassword: string,
+  resetToken: string
+) => {
+  try {
+    const response = await axiosInstance.post(`/reset-password/${resetToken}`, {
+      newPassword,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

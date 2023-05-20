@@ -43,7 +43,7 @@ const App: React.FC = () => {
         />
 
         <Route
-          path="/reset-password"
+          path="/reset-password/:resetToken"
           element={
             <PublicHandler>
               <ResetPasswordForm />

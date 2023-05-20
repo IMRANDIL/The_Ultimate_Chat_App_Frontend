@@ -2,12 +2,22 @@ import React, { useState } from "react";
 
 import { toast } from "react-toastify";
 
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, resetPasswordAsync } from "../redux/authSlice";
+import { useNavigate } from "react-router-dom";
+import { isPasswordValid } from "../utils/utils";
+
 const ResetPasswordForm: React.FC = () => {
-  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [resetToken, setResetToken] = useState("");
+
+  const dispatch: any = useDispatch();
+  const { isLoading } = useSelector((state: RootState) => state.auth.auth);
+  const navigate = useNavigate();
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+    setNewPassword(event.target.value);
   };
 
   const handleConfirmPasswordChange = (
@@ -16,24 +26,39 @@ const ResetPasswordForm: React.FC = () => {
     setConfirmPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (newPassword !== confirmPassword) {
       return toast.error("Passwords do not match");
+    }
+
+    const isPassword: boolean = isPasswordValid(newPassword);
+
+    if (!isPassword) {
+      toast.error(
+        "Password must be alphanumeric and have a minimum length of 8 characters, including at least one special character"
+      );
     }
 
     // Send a request to the server to reset the password
     // using the provided email and new password
     // You can use Axios or any other HTTP library to make the request
     // Example:
-    // axios.post("/api/reset-password", { email, password })
-    //   .then(response => {
-    //     // Handle success
-    //   })
-    //   .catch(error => {
-    //     // Handle error
-    //   });
+
+    try {
+      const response = await dispatch(
+        resetPasswordAsync({ newPassword, resetToken })
+      );
+      if (response && response.payload) {
+        toast.success("Password reset successful");
+        return navigate("/login");
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -55,7 +80,7 @@ const ResetPasswordForm: React.FC = () => {
           New Password:
           <input
             type="password"
-            value={password}
+            value={newPassword}
             onChange={handlePasswordChange}
             placeholder="Enter your new password"
             required
