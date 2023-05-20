@@ -12,7 +12,7 @@ const ChatForm = () => {
   };
 
   return (
-    <div className="h-100 p-6">
+    <div className="h-100  p-6">
       <MessageContainer messages={messages} />
       <div className="absolute inset-x-0 mx-auto bottom-10  w-4/5">
         <div className="flex items-center mt-4">
