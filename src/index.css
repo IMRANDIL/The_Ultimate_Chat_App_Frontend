@@ -1,3 +1,17 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+.borderStyle {
+    border: 1px solid gray !important;
+    border-color: rgb(105, 76, 76) !important;
+    border-radius: 5px !important; /* Adds rounded corners */
+    padding: 10px !important; /* Adds padding for spacing */
+    background-color: #f8f8f8; /* Adds a light background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adds a subtle box shadow */
+    transition: border-color 0.3s ease !important; /* Adds a smooth transition for border color change */
+  }
+  
+  .borderStyleHover:hover {
+    border-color: rgb(155, 116, 116) !important; /* Changes border color on hover */
+  }

@@ -102,8 +102,6 @@ export const getAllUserAsync = createAsyncThunk(
   async ({ accessToken }: { accessToken: string }) => {
     try {
       const response = await getAllUser(accessToken);
-      console.log(response);
-
       return response;
     } catch (error: any) {
       throw error;
@@ -189,12 +187,10 @@ const authSlice = createSlice({
       })
       .addCase(getAllUserAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        console.log(action.payload);
         state.users = action.payload;
       })
       .addCase(getAllUserAsync.rejected, (state, action) => {
         state.isLoading = false;
-        console.log(action.error);
         state.error = action.error.message as string;
       });
   },
