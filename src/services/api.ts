@@ -52,8 +52,9 @@ export const resetPassword = async (
   resetToken: string
 ) => {
   try {
-    const response = await axiosInstance.post(`/reset-password/${resetToken}`, {
+    const response = await axiosInstance.post(`/reset-password`, {
       newPassword,
+      resetToken,
     });
     return response.data;
   } catch (error: any) {

@@ -4,17 +4,18 @@ import { toast } from "react-toastify";
 
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, resetPasswordAsync } from "../redux/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { isPasswordValid } from "../utils/utils";
+import Loader from "../components/Loader";
 
 const ResetPasswordForm: React.FC = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [resetToken, setResetToken] = useState("");
 
   const dispatch: any = useDispatch();
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
   const navigate = useNavigate();
+  const { resetToken } = useParams();
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNewPassword(event.target.value);
@@ -36,7 +37,7 @@ const ResetPasswordForm: React.FC = () => {
     const isPassword: boolean = isPasswordValid(newPassword);
 
     if (!isPassword) {
-      toast.error(
+      return toast.error(
         "Password must be alphanumeric and have a minimum length of 8 characters, including at least one special character"
       );
     }
@@ -50,11 +51,12 @@ const ResetPasswordForm: React.FC = () => {
       const response = await dispatch(
         resetPasswordAsync({ newPassword, resetToken })
       );
+      console.log(response);
       if (response && response.payload) {
         toast.success("Password reset successful");
         return navigate("/login");
       } else {
-        toast.error(response.error.message);
+        return toast.error(response.error.message);
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -63,6 +65,7 @@ const ResetPasswordForm: React.FC = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-200">
+      {isLoading && <Loader />}
       <form
         onSubmit={handleSubmit}
         className="max-w-xs mx-auto p-6 bg-white rounded-md shadow-lg flex flex-col items-center"
