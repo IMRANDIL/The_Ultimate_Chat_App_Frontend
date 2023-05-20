@@ -2,16 +2,18 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../redux/authSlice";
+import axios from "axios";
 
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const [showLogout, setShowLogout] = useState(false);
   const [message, setMessage] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
   const [showLogout, setShowLogout] = useState(false);
+  const [userList, setUserList] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const userListRef = useRef(null);
 
   const handleLogout = () => {
@@ -25,10 +27,6 @@ const Home: React.FC = () => {
       navigate("/login", { replace: true });
     }
   }, [dispatch, navigate, userInfo]);
-
-  // const toggleLogout = () => {
-  //   setShowLogout((prevState) => !prevState);
-  // };
 
   const handleSendMessage = () => {
     if (message.trim() !== "") {
@@ -51,6 +49,23 @@ const Home: React.FC = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchUserList = async () => {
+      try {
+        const response = await axios.get("/api/users");
+        setUserList(response.data);
+      } catch (error) {
+        console.error("Error fetching user list:", error);
+      }
+    };
+
+    fetchUserList();
+  }, []);
+
+  const filteredUserList = userList.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="flex h-screen">
       <div className="w-1/6 bg-gray-200 p-4 relative">
@@ -65,9 +80,6 @@ const Home: React.FC = () => {
           />
         </div>
 
-        {/* <h1 className="text-2xl font-bold mb-4">Chat App</h1>
-        <h2 className="text-xl font-bold mb-2">User List</h2> */}
-        {/* Render user list here */}
         <div className="relative" ref={userListRef}>
           {showLogout && (
             <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white rounded-md shadow-lg">
@@ -80,6 +92,18 @@ const Home: React.FC = () => {
             </div>
           )}
         </div>
+        <input
+          type="text"
+          placeholder="Search users..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="mt-28 p-2 border border-gray-300 rounded-md w-full"
+        />
+        <ul>
+          {filteredUserList.map((user) => (
+            <li key={user.id}>{user.name}</li>
+          ))}
+        </ul>
       </div>
 
       <div className="flex-1 bg-white p-4 relative">

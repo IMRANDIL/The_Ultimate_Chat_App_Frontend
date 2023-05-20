@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import {
   forgotPassword,
+  getAllUser,
   login,
   register,
   resetPassword,
@@ -23,6 +24,7 @@ interface AuthState {
   isLoading: boolean;
   error: string | null;
   msg?: string | null;
+  users?: Array<any> | null;
 }
 
 const initialState: AuthState = {
@@ -30,6 +32,7 @@ const initialState: AuthState = {
   isLoading: false,
   error: null,
   msg: null,
+  users: [],
 };
 
 export const loginAsync = createAsyncThunk(
@@ -93,6 +96,15 @@ export const resetPasswordAsync = createAsyncThunk(
     }
   }
 );
+
+export const getAllUserAsync = createAsyncThunk("auth/allUser", async () => {
+  try {
+    const response = await getAllUser();
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+});
 
 const authSlice = createSlice({
   name: "auth",
@@ -161,6 +173,20 @@ const authSlice = createSlice({
         state.msg = action.payload;
       })
       .addCase(resetPasswordAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(getAllUserAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getAllUserAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.users?.push(action.payload);
+      })
+      .addCase(getAllUserAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
