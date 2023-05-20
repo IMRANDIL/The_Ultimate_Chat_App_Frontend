@@ -11,6 +11,7 @@ import RegisterScreen from "./screens/Register";
 import Home from "./screens/Home";
 import ForgotPasswordForm from "./screens/ForgotPassword";
 import ResetPasswordForm from "./screens/ResetPassword";
+import NotFound from "./screens/NotFound";
 
 const App: React.FC = () => {
   return (
@@ -32,7 +33,6 @@ const App: React.FC = () => {
             </PublicHandler>
           }
         />
-
         <Route
           path="/forgot-password"
           element={
@@ -41,7 +41,6 @@ const App: React.FC = () => {
             </PublicHandler>
           }
         />
-
         <Route
           path="/reset-password/:resetToken"
           element={
@@ -58,6 +57,8 @@ const App: React.FC = () => {
             </PrivateHandler>
           }
         />
+        <Route path="*" element={<NotFound />} /> // Added route for NotFound
+        component
       </Routes>
     </Router>
   );
