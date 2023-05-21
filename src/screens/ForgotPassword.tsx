@@ -68,6 +68,7 @@ const ForgotPasswordForm: React.FC = () => {
         <button
           type="submit"
           className="block w-full px-4 py-2 mt-4 text-sm font-medium text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+          disabled={!email}
         >
           Submit
         </button>
