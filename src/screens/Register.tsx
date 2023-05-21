@@ -64,11 +64,6 @@ const RegisterScreen: React.FC = () => {
       data.append("cloud_name", "dme2ftycw");
       setIsUploading(true);
 
-      // Display the loader while the file is being uploaded
-      if (isUploading) {
-        return <Loader />;
-      }
-
       const response = await fetch(
         "https://api.cloudinary.com/v1_1/dme2ftycw/image/upload",
         {
@@ -107,7 +102,6 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
-      {isUploading || (isLoading && <Loader />)}
       <div className="w-full sm:max-w-md bg-white p-6 rounded-md shadow">
         <div className="relative flex flex-col items-center mb-4">
           <img
@@ -203,7 +197,7 @@ const RegisterScreen: React.FC = () => {
           </Link>
         </div>
       </div>
-      {isUploading && <Loader />}{" "}
+      {(isUploading || isLoading) && <Loader />}{" "}
       {/* Display the loader while isUploading is true */}
     </div>
   );
