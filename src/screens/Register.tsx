@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
+import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import fallbackImg from "../assets/fallback.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +10,7 @@ const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [file, setFile] = useState(null);
 
   const dispatch: any = useDispatch();
 
@@ -28,12 +29,45 @@ const RegisterScreen: React.FC = () => {
     setUsername(e.target.value);
   };
 
+  const handleFileChange = (e: any) => {
+    const selectedFile = e.target.files[0];
+
+    // Validate file type (JPEG, JPG, PNG)
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+    if (!allowedTypes.includes(selectedFile && selectedFile.type)) {
+      toast.error("Only JPEG, JPG, and PNG files are allowed");
+      return;
+    }
+
+    // Validate file size (5MB limit)
+    if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+      toast.error("File size exceeds the limit of 5MB");
+      return;
+    }
+
+    if (selectedFile) {
+      const data = new FormData();
+      data.append("file", selectedFile);
+      data.append("upload_preset", "chat_upload");
+      data.append("cloud_name", "dme2ftycw");
+      fetch("https://api.cloudinary.com/v1_1/dme2ftycw/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((res) => res.json())
+        .then((result) => {
+          setFile(result.url.toString());
+        })
+        .catch((err) => toast.error(err));
+    }
+  };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission logic
     try {
       const response = await dispatch(
-        registerAsync({ email, password, username })
+        registerAsync({ email, password, username, file })
       );
       if (response && response.payload) {
         toast.success("Registration successful");
@@ -111,6 +145,24 @@ const RegisterScreen: React.FC = () => {
               required
             />
           </div>
+
+          <div className="mb-4">
+            <label
+              htmlFor="file"
+              className="block text-gray-700 font-bold mb-2"
+            >
+              Profile Pic
+            </label>
+            <input
+              type="file"
+              id="file"
+              className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+              onChange={handleFileChange}
+              multiple={false}
+              required
+            />
+          </div>
+
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 mt-4"

@@ -53,13 +53,15 @@ export const registerAsync = createAsyncThunk(
     email,
     password,
     username,
+    file,
   }: {
     email: string;
     password: string;
     username: string;
+    file: string;
   }) => {
     try {
-      const response = await register(email, password, username);
+      const response = await register(email, password, username, file);
       return response;
     } catch (error: any) {
       throw error;
