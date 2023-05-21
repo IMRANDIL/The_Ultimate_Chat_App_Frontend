@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useEffect,
+  useRef,
+} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import fallbackImg from "../assets/fallback.jpg";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +17,7 @@ const RegisterScreen: React.FC = () => {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [isUploading, setIsUploading] = useState(false);
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState("");
 
   const dispatch: any = useDispatch();
 
@@ -37,12 +43,14 @@ const RegisterScreen: React.FC = () => {
     const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
     if (!allowedTypes.includes(selectedFile && selectedFile.type)) {
       toast.error("Only JPEG, JPG, and PNG files are allowed");
+      clearFileInput(e.target);
       return;
     }
 
     // Validate file size (5MB limit)
     if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
       toast.error("File size exceeds the limit of 5MB");
+      clearFileInput(e.target);
       return;
     }
     setFile(selectedFile);
@@ -99,6 +107,12 @@ const RegisterScreen: React.FC = () => {
       toast.error(error.message);
     }
   };
+
+  const clearFileInput = (fileInput: HTMLInputElement) => {
+    fileInput.value = ""; // Clear the file input value
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
@@ -175,6 +189,7 @@ const RegisterScreen: React.FC = () => {
             <input
               type="file"
               id="file"
+              ref={fileInputRef}
               className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
               onChange={handleFileChange}
               multiple={false}
