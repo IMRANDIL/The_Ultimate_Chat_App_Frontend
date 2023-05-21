@@ -10,6 +10,7 @@ const RegisterScreen: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState(null);
 
   const dispatch: any = useDispatch();
@@ -44,36 +45,60 @@ const RegisterScreen: React.FC = () => {
       toast.error("File size exceeds the limit of 5MB");
       return;
     }
-
-    if (selectedFile) {
-      const data = new FormData();
-      data.append("file", selectedFile);
-      data.append("upload_preset", "chat_upload");
-      data.append("cloud_name", "dme2ftycw");
-      fetch("https://api.cloudinary.com/v1_1/dme2ftycw/image/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((result) => {
-          setFile(result.url.toString());
-        })
-        .catch((err) => toast.error(err));
-    }
+    setFile(selectedFile);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!email || !password || !username || !file) {
+      toast.error("Please fill in all the fields");
+      return;
+    }
+
     // Handle form submission logic
     try {
-      const response = await dispatch(
-        registerAsync({ email, password, username, file })
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "chat_upload");
+      data.append("cloud_name", "dme2ftycw");
+      setIsUploading(true);
+
+      // Display the loader while the file is being uploaded
+      if (isUploading) {
+        return <Loader />;
+      }
+
+      const response = await fetch(
+        "https://api.cloudinary.com/v1_1/dme2ftycw/image/upload",
+        {
+          method: "post",
+          body: data,
+        }
       );
-      if (response && response.payload) {
+
+      if (!response.ok) {
+        toast.error("Error uploading file");
+        setIsUploading(false);
+        return;
+      }
+
+      const result = await response.json();
+      const imageUrl = result.url.toString();
+      setIsUploading(false);
+      const registerPayload = {
+        email,
+        password,
+        username,
+        file: imageUrl,
+      };
+
+      const responseRegister = await dispatch(registerAsync(registerPayload));
+      if (responseRegister && responseRegister.payload) {
         toast.success("Registration successful");
         navigate("/login");
       } else {
-        toast.error(response.error.message);
+        toast.error(responseRegister.error.message);
       }
     } catch (error: any) {
       toast.error(error.message);
@@ -82,7 +107,7 @@ const RegisterScreen: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-200">
-      {isLoading && <Loader />}
+      {isUploading || (isLoading && <Loader />)}
       <div className="w-full sm:max-w-md bg-white p-6 rounded-md shadow">
         <div className="relative flex flex-col items-center mb-4">
           <img
@@ -166,6 +191,7 @@ const RegisterScreen: React.FC = () => {
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white rounded-md px-4 py-2 mt-4"
+            disabled={isLoading}
           >
             Register
           </button>
@@ -177,6 +203,8 @@ const RegisterScreen: React.FC = () => {
           </Link>
         </div>
       </div>
+      {isUploading && <Loader />}{" "}
+      {/* Display the loader while isUploading is true */}
     </div>
   );
 };
