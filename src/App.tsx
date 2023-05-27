@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -11,8 +11,32 @@ import Home from "./screens/Home";
 import ForgotPasswordForm from "./screens/ForgotPassword";
 import ResetPasswordForm from "./screens/ResetPassword";
 import NotFound from "./screens/NotFound";
+import InternetConnectionNotAvailable from "./screens/InternetConnectionNotAvailable";
 
 const App: React.FC = () => {
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  if (!isOnline) {
+    return (
+      <div>
+        <InternetConnectionNotAvailable />
+      </div>
+    );
+  }
+
   return (
     <Router>
       <Routes>
