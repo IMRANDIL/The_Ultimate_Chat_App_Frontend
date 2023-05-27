@@ -18,6 +18,7 @@ const RegisterScreen: React.FC = () => {
   const [username, setUsername] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [file, setFile] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // New state for password visibility
 
   const dispatch: any = useDispatch();
 
@@ -34,6 +35,10 @@ const RegisterScreen: React.FC = () => {
 
   const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+  };
+
+  const handleTogglePassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   const handleFileChange = (e: any) => {
@@ -153,14 +158,27 @@ const RegisterScreen: React.FC = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="password"
-              className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
-              value={password}
-              onChange={handlePasswordChange}
-              required
-            />
+            <div className="relative">
+              <input
+                type={password && showPassword ? "text" : "password"}
+                id="password"
+                className="w-full px-3 py-2 rounded border border-gray-300 focus:outline-none focus:border-blue-500"
+                value={password}
+                onChange={handlePasswordChange}
+                required
+              />
+              <button
+                type="button"
+                className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500"
+                onClick={handleTogglePassword}
+              >
+                {password && showPassword ? (
+                  <i className="fas fa-eye"></i>
+                ) : (
+                  <i className="fas fa-eye-slash"></i>
+                )}
+              </button>
+            </div>
           </div>
           <div className="mb-4">
             <label
