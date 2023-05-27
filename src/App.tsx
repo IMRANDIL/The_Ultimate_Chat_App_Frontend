@@ -64,7 +64,7 @@ const App: React.FC = () => {
 };
 
 const PrivateHandler: React.FC = (props: any) => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   if (userInfo && userInfo.email) {
     return props.children;
@@ -74,7 +74,7 @@ const PrivateHandler: React.FC = (props: any) => {
 };
 
 const PublicHandler: React.FC = (props: any) => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   if (userInfo && userInfo.email) {
     return <Navigate to="/" />;
