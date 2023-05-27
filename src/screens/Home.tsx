@@ -10,7 +10,7 @@ const Home: React.FC = () => {
   return (
     <div style={{ width: "100%" }}>
       {userInfo && <SideDrawer />}
-      <Box>
+      <Box display="flex" width="100%" justifyContent="space-between">
         {userInfo && <MyChats />}
         {userInfo && <ChatBox />}
       </Box>

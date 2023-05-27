@@ -5,6 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
+import "./App.css";
 import LoginScreen from "./screens/Login";
 import RegisterScreen from "./screens/Register";
 import Home from "./screens/Home";
