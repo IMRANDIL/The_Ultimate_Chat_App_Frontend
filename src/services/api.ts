@@ -63,12 +63,12 @@ export const resetPassword = async (
   }
 };
 
-export const getAllUser = async (accessToken: string) => {
+axios.defaults.withCredentials = true;
+
+export const getAllUser = async () => {
   try {
     const response = await axiosInstance.get(`/allUser`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      withCredentials: true,
     });
     return response.data;
   } catch (error: any) {
