@@ -1,15 +1,18 @@
 import React from "react";
 import { Box } from "@chakra-ui/layout";
+import SideDrawer from "../components/ChatComponents/SideDrawer";
+import MyChats from "../components/ChatComponents/MyChats";
+import ChatBox from "../components/ChatComponents/ChatBox";
 
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   return (
     <div style={{ width: "100%" }}>
-      {/* {userInfo && <SideDrawer/>} */}
+      {userInfo && <SideDrawer />}
       <Box>
-        {/* {userInfo && <MyChats/>} */}
-        {/* {userInfo && <ChatBox/>} */}
+        {userInfo && <MyChats />}
+        {userInfo && <ChatBox />}
       </Box>
     </div>
   );
