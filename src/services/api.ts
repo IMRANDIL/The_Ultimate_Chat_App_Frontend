@@ -65,9 +65,9 @@ export const resetPassword = async (
 
 axios.defaults.withCredentials = true;
 
-export const getAllUser = async () => {
+export const getAllUser = async (searchQuery) => {
   try {
-    const response = await axiosInstance.get(`/allUser`, {
+    const response = await axiosInstance.get(`/allUser?search=${searchQuery}`, {
       withCredentials: true,
     });
     return response.data;

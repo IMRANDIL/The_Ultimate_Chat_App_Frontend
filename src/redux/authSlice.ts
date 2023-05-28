@@ -99,14 +99,17 @@ export const resetPasswordAsync = createAsyncThunk(
   }
 );
 
-export const getAllUserAsync = createAsyncThunk("auth/allUser", async () => {
-  try {
-    const response = await getAllUser();
-    return response;
-  } catch (error: any) {
-    throw error;
+export const getAllUserAsync = createAsyncThunk(
+  "auth/allUser",
+  async ({ searchQuery }: { searchQuery: string }) => {
+    try {
+      const response = await getAllUser(searchQuery);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
   }
-});
+);
 
 const authSlice = createSlice({
   name: "auth",
