@@ -10,6 +10,11 @@ import {
   MenuList,
   MenuItem,
   MenuDivider,
+  Drawer,
+  useDisclosure,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerHeader,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
@@ -25,6 +30,7 @@ const SideDrawer: React.FC = () => {
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const dispatch: any = useDispatch();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -43,7 +49,7 @@ const SideDrawer: React.FC = () => {
         borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
-          <Button variant="ghost">
+          <Button variant="ghost" onClick={onOpen}>
             <i className="fa fa-search"></i>
             <Text display={{ base: "none", md: "flex" }} px="4">
               Search User
@@ -79,6 +85,12 @@ const SideDrawer: React.FC = () => {
           </Menu>
         </div>
       </Box>
+      <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
+        </DrawerContent>
+      </Drawer>
     </>
   );
 };
