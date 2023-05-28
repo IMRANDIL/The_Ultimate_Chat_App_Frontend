@@ -69,7 +69,7 @@ const SideDrawer: React.FC = () => {
               />
             </MenuButton>
             <MenuList>
-              <ProfileModel>
+              <ProfileModel user={userInfo}>
                 <MenuItem>My Profile</MenuItem>
               </ProfileModel>
 
