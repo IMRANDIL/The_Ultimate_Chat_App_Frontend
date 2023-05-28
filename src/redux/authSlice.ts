@@ -101,9 +101,9 @@ export const resetPasswordAsync = createAsyncThunk(
 
 export const getAllUserAsync = createAsyncThunk(
   "auth/allUser",
-  async ({ searchQuery }: { searchQuery: string }) => {
+  async ({ search }: { search: string }) => {
     try {
-      const response = await getAllUser(searchQuery);
+      const response = await getAllUser(search);
       return response;
     } catch (error: any) {
       throw error;
@@ -189,10 +189,12 @@ const authSlice = createSlice({
       })
       .addCase(getAllUserAsync.fulfilled, (state, action) => {
         state.isLoading = false;
+        console.log(action.payload);
         state.users = action.payload;
       })
       .addCase(getAllUserAsync.rejected, (state, action) => {
         state.isLoading = false;
+        console.log(action.error);
         state.error = action.error.message as string;
       });
   },

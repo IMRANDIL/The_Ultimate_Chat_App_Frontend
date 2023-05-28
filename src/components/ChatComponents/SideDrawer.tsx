@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
 import ProfileModel from "./ProfileModel";
 import { toast } from "react-toastify";
-import { getAllUser } from "../../services/api";
+import { getAllUserAsync } from "../../redux/authSlice";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -45,7 +45,7 @@ const SideDrawer: React.FC = () => {
   const handleSearch = async () => {
     if (search.trim()) {
       try {
-        const response = await dispatch(getAllUser({ search }));
+        const response = await dispatch(getAllUserAsync({ search }));
         if (response && response.payload) {
           console.log(response.payload);
         } else {

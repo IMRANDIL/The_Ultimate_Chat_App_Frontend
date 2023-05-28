@@ -5,6 +5,7 @@ const BASE_URL = "http://localhost:5000/api/v1/user";
 // Create an instance of Axios with the base URL
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
+  withCredentials: true,
 });
 
 export const login = async (email: string, password: string) => {
@@ -63,11 +64,9 @@ export const resetPassword = async (
   }
 };
 
-axios.defaults.withCredentials = true;
-
-export const getAllUser = async (searchQuery) => {
+export const getAllUser = async (search: string) => {
   try {
-    const response = await axiosInstance.get(`/allUser?search=${searchQuery}`, {
+    const response = await axiosInstance.get(`/allUser?search=${search}`, {
       withCredentials: true,
     });
     return response.data;
