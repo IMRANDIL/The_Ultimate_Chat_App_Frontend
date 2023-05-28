@@ -25,8 +25,8 @@ import { RootState, logout } from "../../redux/authSlice";
 import ProfileModel from "./ProfileModel";
 import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
-import Loader from "../Loader";
 import ChatLoading from "./ChatLoading";
+import UserListItem from "./UserListItem";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -61,6 +61,11 @@ const SideDrawer: React.FC = () => {
       return;
     }
   };
+
+  const accessChat = (participantId: any) => {
+    console.log(participantId);
+  };
+
   return (
     <>
       <Box
@@ -123,8 +128,16 @@ const SideDrawer: React.FC = () => {
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
+            {isLoading && <ChatLoading />}
+            {searchResult &&
+              searchResult.map((result) => (
+                <UserListItem
+                  key={result._id}
+                  user={result}
+                  handleChatCreation={() => accessChat(result._id)}
+                />
+              ))}
           </DrawerBody>
-          {isLoading && <ChatLoading />}
         </DrawerContent>
       </Drawer>
     </>
