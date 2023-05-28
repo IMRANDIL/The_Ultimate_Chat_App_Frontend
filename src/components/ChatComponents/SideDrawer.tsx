@@ -15,6 +15,8 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerHeader,
+  DrawerBody,
+  Input,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
@@ -37,6 +39,8 @@ const SideDrawer: React.FC = () => {
     dispatch(logout());
     navigate("/login", { replace: true });
   };
+
+  const handleSearch = () => {};
   return (
     <>
       <Box
@@ -89,6 +93,17 @@ const SideDrawer: React.FC = () => {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerHeader borderBottomWidth="1px">Search Users</DrawerHeader>
+          <DrawerBody>
+            <Box display="flex" pb={2}>
+              <Input
+                placeholder="Search by name or email"
+                mr={2}
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <Button onClick={handleSearch}>Go</Button>
+            </Box>
+          </DrawerBody>
         </DrawerContent>
       </Drawer>
     </>
