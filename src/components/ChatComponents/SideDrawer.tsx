@@ -1,12 +1,22 @@
 import React, { useState } from "react";
 import { Box } from "@chakra-ui/layout";
-import { Button, Tooltip, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Tooltip,
+  Text,
+  Menu,
+  MenuButton,
+  Avatar,
+} from "@chakra-ui/react";
+import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState();
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   return (
     <>
@@ -27,6 +37,26 @@ const SideDrawer: React.FC = () => {
             </Text>
           </Button>
         </Tooltip>
+        <Text fontSize="2xl" fontFamily="Work sans">
+          Chit-Chat
+        </Text>
+        <div>
+          <Menu>
+            <MenuButton p={1}>
+              <BellIcon fontSize="2xl" m={1} />
+            </MenuButton>
+          </Menu>
+          <Menu>
+            <MenuButton p={1} as={Button} rightIcon={<ChevronDownIcon />}>
+              <Avatar
+                size="sm"
+                cursor="pointer"
+                name={userInfo.username}
+                src={userInfo.profilePic}
+              />
+            </MenuButton>
+          </Menu>
+        </div>
       </Box>
     </>
   );
