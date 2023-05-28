@@ -30,9 +30,9 @@ const ProfileModel: React.FC = ({ user, children }) => {
         />
       )}
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered size={"lg"}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent height={"350px"}>
           <ModalHeader
             fontSize="40px"
             fontFamily="Work sans"
@@ -42,7 +42,12 @@ const ProfileModel: React.FC = ({ user, children }) => {
             {user.username}
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody
+            display="flex"
+            justifyContent={"space-between"}
+            flexDirection={"column"}
+            alignItems={"center"}
+          >
             <Image
               borderRadius="full"
               boxSize={"150px"}
