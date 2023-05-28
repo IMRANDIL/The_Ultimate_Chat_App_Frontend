@@ -47,7 +47,7 @@ const SideDrawer: React.FC = () => {
       try {
         const response = await dispatch(getAllUserAsync({ search }));
         if (response && response.payload) {
-          console.log(response.payload);
+          setSearchResult(response.payload.data);
         } else {
           toast.error(response.error.message);
         }
