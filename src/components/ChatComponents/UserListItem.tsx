@@ -6,7 +6,7 @@ const UserListItem: React.FC = ({ user, handleChatCreation }) => {
     <Box
       onClick={handleChatCreation}
       cursor={"pointer"}
-      bg={"#E8E8E*"}
+      bg={"#E8E8E8"}
       _hover={{
         background: "#38B2AC",
         color: "white",
