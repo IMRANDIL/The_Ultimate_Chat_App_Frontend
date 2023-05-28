@@ -7,8 +7,14 @@ import {
   Menu,
   MenuButton,
   Avatar,
+  MenuList,
+  MenuItem,
+  MenuDivider,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../../redux/authSlice";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -17,7 +23,13 @@ const SideDrawer: React.FC = () => {
   const [loadingChat, setLoadingChat] = useState();
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+  const dispatch: any = useDispatch();
+  const navigate = useNavigate();
 
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate("/login", { replace: true });
+  };
   return (
     <>
       <Box
@@ -55,6 +67,11 @@ const SideDrawer: React.FC = () => {
                 src={userInfo.profilePic}
               />
             </MenuButton>
+            <MenuList>
+              <MenuItem>My Profile</MenuItem>
+              <MenuDivider />
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </MenuList>
           </Menu>
         </div>
       </Box>
