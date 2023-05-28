@@ -171,6 +171,7 @@ const RegisterScreen: React.FC = () => {
                 type="button"
                 className="absolute top-1/2 right-2 transform -translate-y-1/2 text-gray-500"
                 onClick={handleTogglePassword}
+                disabled={!password}
               >
                 {password && showPassword ? (
                   <i className="fas fa-eye"></i>
