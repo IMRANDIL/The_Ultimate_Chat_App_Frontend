@@ -15,6 +15,7 @@ import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/authSlice";
+import ProfileModel from "./ProfileModel";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -68,7 +69,10 @@ const SideDrawer: React.FC = () => {
               />
             </MenuButton>
             <MenuList>
-              <MenuItem>My Profile</MenuItem>
+              <ProfileModel>
+                <MenuItem>My Profile</MenuItem>
+              </ProfileModel>
+
               <MenuDivider />
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
