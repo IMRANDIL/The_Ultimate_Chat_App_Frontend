@@ -19,12 +19,14 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../redux/authSlice";
+import { RootState, logout } from "../../redux/authSlice";
 import ProfileModel from "./ProfileModel";
 import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
+import Loader from "../Loader";
+import ChatLoading from "./ChatLoading";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -33,6 +35,7 @@ const SideDrawer: React.FC = () => {
   const [loadingChat, setLoadingChat] = useState();
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+  const { isLoading } = useSelector((state: RootState) => state.auth.auth);
   const dispatch: any = useDispatch();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
@@ -121,6 +124,7 @@ const SideDrawer: React.FC = () => {
               <Button onClick={handleSearch}>Go</Button>
             </Box>
           </DrawerBody>
+          {isLoading && <ChatLoading />}
         </DrawerContent>
       </Drawer>
     </>
