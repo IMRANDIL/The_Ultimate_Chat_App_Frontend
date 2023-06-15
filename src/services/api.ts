@@ -74,4 +74,16 @@ export const getAllUser = async (search: string) => {
     throw error.response?.data?.error;
   }
 };
+
+export const getAccessToken = async () => {
+  try {
+    const response = await axiosInstance.get(`/access-token`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

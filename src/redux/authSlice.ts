@@ -5,6 +5,7 @@ import {
 } from "@reduxjs/toolkit";
 import {
   forgotPassword,
+  getAccessToken,
   getAllUser,
   login,
   register,
@@ -111,6 +112,18 @@ export const getAllUserAsync = createAsyncThunk(
   }
 );
 
+export const getAccessTokenAsync = createAsyncThunk(
+  "auth/accessToken",
+  async () => {
+    try {
+      const response = await getAccessToken();
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -192,6 +205,20 @@ const authSlice = createSlice({
         state.users = action.payload;
       })
       .addCase(getAllUserAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(getAccessTokenAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(getAccessTokenAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.msg = action.payload;
+      })
+      .addCase(getAccessTokenAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
