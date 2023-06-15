@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box } from "@chakra-ui/layout";
 import {
   Button,
@@ -44,6 +44,13 @@ const SideDrawer: React.FC = () => {
     dispatch(logout());
     navigate("/login", { replace: true });
   };
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchResult([]); // Reset search result when the drawer is closed
+      setSearch("");
+    }
+  }, [isOpen]);
 
   const handleSearch = async () => {
     if (search.trim()) {
