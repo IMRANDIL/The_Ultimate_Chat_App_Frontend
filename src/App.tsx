@@ -103,17 +103,17 @@ const PrivateHandler: React.FC = (props: any) => {
         if (response && response.payload) {
           // toast.success("set accessToken successful");
         } else {
-          toast.error(response.error.message);
+          // toast.error(response.error.message);
         }
       } catch (error: any) {
         toast.error(error.message);
       }
     };
 
-    // Function to fetch access token immediately and then every 4 minutes
+    // Function to fetch access token immediately and then every 59 minutes
     const fetchAccessToken = async () => {
-      await setAccessToken();
-      const interval = setInterval(setAccessToken, 4 * 60 * 1000);
+      // await setAccessToken();
+      const interval = setInterval(setAccessToken, 59 * 60 * 1000);
       return interval;
     };
 
