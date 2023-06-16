@@ -93,27 +93,42 @@ const App: React.FC = () => {
 
 const PrivateHandler: React.FC = (props: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
-  const { error } = useSelector((state: RootState) => state.auth.auth);
+  // const { error } = useSelector((state: RootState) => state.auth.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const setAccessToken = async () => {
-      if (error && error === "Authorization Failed, No Token") {
-        try {
-          const response = await dispatch(getAccessTokenAsync());
-          if (response && response.payload) {
-            // toast.success("set accessToken successful");
-          } else {
-            toast.error(response.error.message);
-          }
-        } catch (error: any) {
-          toast.error(error.message);
+      try {
+        const response = await dispatch(getAccessTokenAsync());
+        if (response && response.payload) {
+          // toast.success("set accessToken successful");
+        } else {
+          toast.error(response.error.message);
         }
+      } catch (error: any) {
+        toast.error(error.message);
       }
     };
 
-    setAccessToken();
-  }, [error]);
+    // Function to fetch access token immediately and then every 4 minutes
+    const fetchAccessToken = async () => {
+      await setAccessToken();
+      const interval = setInterval(setAccessToken, 4 * 60 * 1000);
+      return interval;
+    };
+
+    // Call the function to start fetching the access token
+    const startFetchingAccessToken = async () => {
+      const interval = await fetchAccessToken();
+
+      // Clean up the timer when the component unmounts
+      return () => {
+        clearInterval(interval);
+      };
+    };
+
+    startFetchingAccessToken();
+  }, []);
 
   if (userInfo && userInfo.email) {
     return props.children;
