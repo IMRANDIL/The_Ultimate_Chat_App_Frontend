@@ -77,7 +77,7 @@ export const getAllUser = async (search: string) => {
 
 export const getAccessToken = async () => {
   try {
-    const response = await axiosInstance.get(`/access-token`, {
+    const response = await axiosInstance.post(`/access-token`, {
       withCredentials: true,
     });
     return response.data;

@@ -13,6 +13,9 @@ import ForgotPasswordForm from "./screens/ForgotPassword";
 import ResetPasswordForm from "./screens/ResetPassword";
 import NotFound from "./screens/NotFound";
 import InternetConnectionNotAvailable from "./screens/InternetConnectionNotAvailable";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, getAccessTokenAsync } from "./redux/authSlice";
+import { toast } from "react-toastify";
 
 const App: React.FC = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -90,6 +93,27 @@ const App: React.FC = () => {
 
 const PrivateHandler: React.FC = (props: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+  const { error } = useSelector((state: RootState) => state.auth.auth);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const setAccessToken = async () => {
+      if (error && error === "Authorization Failed, No Token") {
+        try {
+          const response = await dispatch(getAccessTokenAsync());
+          if (response && response.payload) {
+            // toast.success("set accessToken successful");
+          } else {
+            toast.error(response.error.message);
+          }
+        } catch (error: any) {
+          toast.error(error.message);
+        }
+      }
+    };
+
+    setAccessToken();
+  }, [error]);
 
   if (userInfo && userInfo.email) {
     return props.children;

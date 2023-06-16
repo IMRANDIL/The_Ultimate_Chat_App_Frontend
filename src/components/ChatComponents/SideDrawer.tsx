@@ -58,6 +58,9 @@ const SideDrawer: React.FC = () => {
         const response = await dispatch(getAllUserAsync({ search }));
         if (response && response.payload) {
           setSearchResult(response.payload.data);
+        } else if (
+          response.error.message === "Authorization Failed, No Token"
+        ) {
         } else {
           toast.error(response.error.message);
         }
