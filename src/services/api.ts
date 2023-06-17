@@ -91,9 +91,13 @@ export const getAccessToken = async () => {
 
 export const createChat = async (participantId: string) => {
   try {
-    const response = await axiosInstance.post(`/chats`, participantId, {
-      withCredentials: true,
-    });
+    const response = await axiosInstance.post(
+      `/chats`,
+      { participantId },
+      {
+        withCredentials: true,
+      }
+    );
     return response.data;
   } catch (error: any) {
     throw error.response?.data?.error;

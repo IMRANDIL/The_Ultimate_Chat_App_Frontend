@@ -5,28 +5,36 @@ import {
 } from "@reduxjs/toolkit";
 import { createChat } from "../services/api";
 
-interface User {
-  id: string;
+interface Participant {
+  _id: string;
   email: string;
   username: string;
   profilePic: string;
   ipAddress: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
 }
-
 interface chatState {
-  user: User | null;
+  _id?: string;
+  chatName: string;
+  isGroupChat: boolean;
+  participants: Participant[];
   isLoading: boolean;
   error: string | null;
   msg?: string | null;
-  users?: Array<any> | null;
+  createdAt?: string;
+  updatedAt?: string;
+  __v?: number;
 }
 
 const initialState: chatState = {
-  user: null,
+  participants: [],
   isLoading: false,
   error: null,
   msg: null,
-  users: null,
+  chatName: "",
+  isGroupChat: false,
 };
 
 export const createChatAsync = createAsyncThunk(
@@ -57,7 +65,7 @@ const chatSlice = createSlice({
       })
       .addCase(createChatAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload;
+        state.participants = action.payload;
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(createChatAsync.rejected, (state, action) => {
