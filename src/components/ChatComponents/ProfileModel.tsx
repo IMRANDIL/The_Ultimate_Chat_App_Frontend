@@ -37,7 +37,7 @@ const ProfileModel: React.FC = ({ user, children }) => {
             display="flex"
             justifyContent="center"
           >
-            {user.username}
+            {user && user.username}
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody
@@ -49,14 +49,14 @@ const ProfileModel: React.FC = ({ user, children }) => {
             <Image
               borderRadius="full"
               boxSize={"150px"}
-              src={user.profilePic}
-              alt={user.username}
+              src={user && user.profilePic}
+              alt={user && user.username}
             />
             <Text
               fontSize={{ base: "28px", md: "30px" }}
               fontFamily={"Work sans"}
             >
-              {user.email}
+              {user && user.email}
             </Text>
           </ModalBody>
         </ModalContent>

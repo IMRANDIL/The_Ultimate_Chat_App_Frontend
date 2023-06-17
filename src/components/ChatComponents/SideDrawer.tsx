@@ -129,8 +129,8 @@ const SideDrawer: React.FC = () => {
               <Avatar
                 size="sm"
                 cursor="pointer"
-                name={userInfo.username}
-                src={userInfo.profilePic}
+                name={userInfo && userInfo.username}
+                src={userInfo && userInfo.profilePic}
               />
             </MenuButton>
             <MenuList>
