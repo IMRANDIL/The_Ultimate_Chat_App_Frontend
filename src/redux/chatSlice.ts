@@ -65,6 +65,7 @@ const chatSlice = createSlice({
       state.selectedParticipants = [];
       state.msg = "";
       state.error = null;
+      localStorage.removeItem("selectedChat");
     },
     clearError: (state) => {
       state.error = null;

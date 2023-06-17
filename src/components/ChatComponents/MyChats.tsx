@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { fetchChatsAsync } from "../../redux/chatSlice";
 import { useDispatch } from "react-redux";
+import { Box } from "@chakra-ui/react";
 
 const MyChats: React.FC = () => {
   const [chats, setChats] = useState([]);
@@ -25,7 +26,11 @@ const MyChats: React.FC = () => {
     fetchChats();
   }, []);
 
-  return <div>MyChats</div>;
+  return (
+    <>
+      <Box></Box>
+    </>
+  );
 };
 
 export default MyChats;

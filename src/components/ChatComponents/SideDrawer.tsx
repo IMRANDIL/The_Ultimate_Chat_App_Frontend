@@ -44,6 +44,7 @@ const SideDrawer: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
   const { fetchChats } = useSelector((state: RootState) => state.chat.chat);
+
   const dispatch: any = useDispatch();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
@@ -90,11 +91,30 @@ const SideDrawer: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    // Retrieve the selectedChat value from local storage
+    const storedSelectedChat = localStorage.getItem("selectedChat");
+    if (storedSelectedChat) {
+      setSelectedChat(JSON.parse(storedSelectedChat));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Store the selectedChat value in local storage
+    localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
+  }, [selectedChat]);
+
   const accessChat = async (participantId: any) => {
     try {
       const response = await dispatch(createChatAsync({ participantId }));
       if (response && response.payload) {
-        await dispatch(fetchChatsAsync());
+        const isChatExists = fetchChats.find(
+          (c: any) => c._id === response.payload._id
+        );
+        if (!isChatExists) {
+          await dispatch(fetchChatsAsync());
+        }
+
         setSelectedChat(response.payload);
         onClose();
       } else {
