@@ -92,14 +92,6 @@ const SideDrawer: React.FC = () => {
   };
 
   useEffect(() => {
-    // Retrieve the selectedChat value from local storage
-    const storedSelectedChat = localStorage.getItem("selectedChat");
-    if (storedSelectedChat) {
-      setSelectedChat(JSON.parse(storedSelectedChat));
-    }
-  }, []);
-
-  useEffect(() => {
     // Store the selectedChat value in local storage
     localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
   }, [selectedChat]);
