@@ -27,6 +27,7 @@ import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "./UserListItem";
+import { createChatAsync } from "../../redux/chatSlice";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -72,8 +73,17 @@ const SideDrawer: React.FC = () => {
     }
   };
 
-  const accessChat = (participantId: any) => {
-    console.log(participantId);
+  const accessChat = async (participantId: any) => {
+    try {
+      const response = await dispatch(createChatAsync({ participantId }));
+      if (response && response.payload) {
+        console.log(response.payload);
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   return (
