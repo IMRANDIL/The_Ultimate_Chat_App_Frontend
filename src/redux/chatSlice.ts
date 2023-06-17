@@ -68,7 +68,7 @@ const chatSlice = createSlice({
 });
 
 const rootReducer = combineReducers({
-  auth: chatSlice.reducer,
+  chat: chatSlice.reducer,
 });
 
 export default rootReducer;
