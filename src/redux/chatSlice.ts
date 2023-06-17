@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { createChat } from "../services/api";
+import { createChat, fetchChats } from "../services/api";
 
 interface Participant {
   _id: string;
@@ -17,7 +17,8 @@ interface Participant {
 }
 interface chatState {
   _id?: string;
-  participants: Participant[];
+  selectedParticipants: Participant[];
+  fetchChats: Participant[];
   isLoading: boolean;
   error: string | null;
   msg?: string | null;
@@ -27,7 +28,8 @@ interface chatState {
 }
 
 const initialState: chatState = {
-  participants: [],
+  selectedParticipants: [],
+  fetchChats: [],
   isLoading: false,
   error: null,
   msg: null,
@@ -45,6 +47,15 @@ export const createChatAsync = createAsyncThunk(
   }
 );
 
+export const fetchChatsAsync = createAsyncThunk("chat/fetchChat", async () => {
+  try {
+    const response = await fetchChats();
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+});
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -61,10 +72,25 @@ const chatSlice = createSlice({
       })
       .addCase(createChatAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.participants = action.payload;
+        state.selectedParticipants = action.payload;
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(createChatAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(fetchChatsAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchChatsAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchChats = action.payload;
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+      })
+      .addCase(fetchChatsAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

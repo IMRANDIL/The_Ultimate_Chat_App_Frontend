@@ -115,4 +115,15 @@ export const createChat = async (participantId: string) => {
   }
 };
 
+export const fetchChats = async () => {
+  try {
+    const response = await axiosInstance.get(`/chats`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

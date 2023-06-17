@@ -110,10 +110,10 @@ const PrivateHandler: React.FC = (props: any) => {
       }
     };
 
-    // Function to fetch access token immediately and then every 59 minutes
+    // Function to fetch access token immediately and then every 55 minutes
     const fetchAccessToken = async () => {
       // await setAccessToken();
-      const interval = setInterval(setAccessToken, 59 * 60 * 1000);
+      const interval = setInterval(setAccessToken, 55 * 60 * 1000);
       return interval;
     };
 

@@ -88,6 +88,7 @@ const SideDrawer: React.FC = () => {
       const response = await dispatch(createChatAsync({ participantId }));
       if (response && response.payload) {
         console.log(response.payload);
+        onClose();
       } else {
         toast.error(response.error.message);
       }
