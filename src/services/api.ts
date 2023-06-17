@@ -1,6 +1,6 @@
 import axios from "axios";
 // Define your API base URL
-const BASE_URL = "http://localhost:5000/api/v1/user";
+const BASE_URL = "http://localhost:5000/api/v1";
 
 // Create an instance of Axios with the base URL
 const axiosInstance = axios.create({
@@ -10,7 +10,10 @@ const axiosInstance = axios.create({
 
 export const login = async (email: string, password: string) => {
   try {
-    const response = await axiosInstance.post("/login", { email, password });
+    const response = await axiosInstance.post("/user/login", {
+      email,
+      password,
+    });
     return response.data;
   } catch (error: any) {
     throw error.response?.data?.error;
@@ -24,7 +27,7 @@ export const register = async (
   file: string
 ) => {
   try {
-    const response = await axiosInstance.post("/signup", {
+    const response = await axiosInstance.post("/user/signup", {
       email,
       password,
       username,
@@ -40,7 +43,7 @@ export const register = async (
 
 export const forgotPassword = async (email: string) => {
   try {
-    const response = await axiosInstance.post("/forgot-password", {
+    const response = await axiosInstance.post("/user/forgot-password", {
       email,
     });
     return response.data;
@@ -54,7 +57,7 @@ export const resetPassword = async (
   resetToken: string
 ) => {
   try {
-    const response = await axiosInstance.post(`/reset-password`, {
+    const response = await axiosInstance.post(`/user/reset-password`, {
       newPassword,
       resetToken,
     });
@@ -66,7 +69,7 @@ export const resetPassword = async (
 
 export const getAllUser = async (search: string) => {
   try {
-    const response = await axiosInstance.get(`/allUser?search=${search}`, {
+    const response = await axiosInstance.get(`/user/allUser?search=${search}`, {
       withCredentials: true,
     });
     return response.data;
@@ -77,7 +80,7 @@ export const getAllUser = async (search: string) => {
 
 export const getAccessToken = async () => {
   try {
-    const response = await axiosInstance.post(`/access-token`, {
+    const response = await axiosInstance.post(`/user/access-token`, {
       withCredentials: true,
     });
     return response.data;
