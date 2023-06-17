@@ -13,7 +13,7 @@ export const isPasswordValid = (password: string) => {
 
 export const getSender = (participants: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
-  return participants[0]._id === userInfo.id
+  return participants[0]._id === userInfo && userInfo.id
     ? participants[1].username
     : participants[0].username;
 };

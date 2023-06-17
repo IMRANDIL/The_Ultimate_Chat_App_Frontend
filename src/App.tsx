@@ -93,7 +93,6 @@ const App: React.FC = () => {
 
 const PrivateHandler: React.FC = (props: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
-  // const { error } = useSelector((state: RootState) => state.auth.auth);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -110,25 +109,24 @@ const PrivateHandler: React.FC = (props: any) => {
       }
     };
 
-    // Function to fetch access token immediately and then every 55 minutes
-    const fetchAccessToken = async () => {
-      // await setAccessToken();
-      const interval = setInterval(setAccessToken, 55 * 60 * 1000);
-      return interval;
+    const refreshAccessToken = () => {
+      setAccessToken();
+      setTimeout(refreshAccessToken, 60 * 60 * 1000); // Refresh token every 1 hour
     };
 
-    // Call the function to start fetching the access token
-    const startFetchingAccessToken = async () => {
-      const interval = await fetchAccessToken();
+    const loggedInAt = new Date(userInfo.loggedInAt);
+    const nextFetchTime = new Date(loggedInAt.getTime() + 60 * 60 * 1000);
 
-      // Clean up the timer when the component unmounts
-      return () => {
-        clearInterval(interval);
-      };
-    };
-
-    startFetchingAccessToken();
-  }, []);
+    if (nextFetchTime > new Date()) {
+      // Schedule the first token refresh after the remaining time until nextFetchTime
+      const initialDelay = nextFetchTime.getTime() - new Date().getTime();
+      setTimeout(refreshAccessToken, initialDelay);
+    } else {
+      // Perform token refresh immediately if nextFetchTime has already passed
+      setAccessToken();
+      setTimeout(refreshAccessToken, 60 * 60 * 1000);
+    }
+  }, [dispatch, userInfo.loggedInAt]);
 
   if (userInfo && userInfo.email) {
     return props.children;
