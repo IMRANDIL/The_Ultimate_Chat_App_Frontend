@@ -10,6 +10,7 @@ import {
   login,
   register,
   resetPassword,
+  userLogout,
 } from "../services/api";
 
 interface User {
@@ -112,6 +113,15 @@ export const getAllUserAsync = createAsyncThunk(
   }
 );
 
+export const logoutUserAsync = createAsyncThunk("auth/logout", async () => {
+  try {
+    const response = await userLogout();
+    return response;
+  } catch (error: any) {
+    throw error;
+  }
+});
+
 export const getAccessTokenAsync = createAsyncThunk(
   "auth/accessToken",
   async () => {
@@ -132,6 +142,11 @@ const authSlice = createSlice({
       state.user = null;
       state.error = null;
       localStorage.removeItem("userInfo");
+      // Clear cookies
+      document.cookie =
+        "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     },
     clearError: (state) => {
       state.error = null;
@@ -219,6 +234,20 @@ const authSlice = createSlice({
         state.msg = action.payload;
       })
       .addCase(getAccessTokenAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(logoutUserAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(logoutUserAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.msg = action.payload;
+      })
+      .addCase(logoutUserAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

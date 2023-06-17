@@ -21,13 +21,14 @@ import {
 import { BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { RootState, logout } from "../../redux/authSlice";
+import { RootState, logout, logoutUserAsync } from "../../redux/authSlice";
 import ProfileModel from "./ProfileModel";
 import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "./UserListItem";
 import { createChatAsync } from "../../redux/chatSlice";
+import Loader from "../Loader";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
@@ -41,9 +42,18 @@ const SideDrawer: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login", { replace: true });
+  const handleLogout = async () => {
+    try {
+      const response = await dispatch(logoutUserAsync());
+      if (response && response.payload) {
+        dispatch(logout());
+        navigate("/login", { replace: true });
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
   };
 
   useEffect(() => {
@@ -124,6 +134,7 @@ const SideDrawer: React.FC = () => {
               />
             </MenuButton>
             <MenuList>
+              {isLoading && <Loader />}
               <ProfileModel user={userInfo}>
                 <MenuItem>My Profile</MenuItem>
               </ProfileModel>

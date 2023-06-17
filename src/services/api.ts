@@ -78,6 +78,17 @@ export const getAllUser = async (search: string) => {
   }
 };
 
+export const userLogout = async () => {
+  try {
+    const response = await axiosInstance.get(`/user/logout`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export const getAccessToken = async () => {
   try {
     const response = await axiosInstance.post(`/user/access-token`, {
