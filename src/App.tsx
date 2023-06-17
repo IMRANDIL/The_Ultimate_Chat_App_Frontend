@@ -111,21 +111,14 @@ const PrivateHandler: React.FC = (props: any) => {
 
     const refreshAccessToken = () => {
       setAccessToken();
-      setTimeout(refreshAccessToken, 60 * 60 * 1000); // Refresh token every 1 hour
     };
 
-    const loggedInAt = new Date(userInfo.loggedInAt);
-    const nextFetchTime = new Date(loggedInAt.getTime() + 60 * 60 * 1000);
+    const interval = setInterval(refreshAccessToken, 55 * 60 * 1000);
 
-    if (nextFetchTime > new Date()) {
-      // Schedule the first token refresh after the remaining time until nextFetchTime
-      const initialDelay = nextFetchTime.getTime() - new Date().getTime();
-      setTimeout(refreshAccessToken, initialDelay);
-    } else {
-      // Perform token refresh immediately if nextFetchTime has already passed
-      setAccessToken();
-      setTimeout(refreshAccessToken, 60 * 60 * 1000);
-    }
+    // Clean up the interval when the component unmounts or when the `userInfo.loggedInAt` changes.
+    return () => {
+      clearInterval(interval);
+    };
   }, [dispatch, userInfo.loggedInAt]);
 
   if (userInfo && userInfo.email) {
