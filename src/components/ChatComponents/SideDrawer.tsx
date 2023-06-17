@@ -27,7 +27,11 @@ import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "./UserListItem";
-import { createChatAsync, fetchChatsAsync } from "../../redux/chatSlice";
+import {
+  clearStore,
+  createChatAsync,
+  fetchChatsAsync,
+} from "../../redux/chatSlice";
 import Loader from "../Loader";
 
 const SideDrawer: React.FC = () => {
@@ -49,6 +53,7 @@ const SideDrawer: React.FC = () => {
       const response = await dispatch(logoutUserAsync());
       if (response && response.payload) {
         dispatch(logout());
+        dispatch(clearStore());
         navigate("/login", { replace: true });
       } else {
         toast.error(response.error.message);

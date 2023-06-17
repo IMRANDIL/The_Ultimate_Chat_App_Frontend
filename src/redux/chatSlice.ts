@@ -60,6 +60,12 @@ const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    clearStore: (state) => {
+      state.fetchChats = [];
+      state.selectedParticipants = [];
+      state.msg = "";
+      state.error = null;
+    },
     clearError: (state) => {
       state.error = null;
     },
@@ -96,6 +102,7 @@ const chatSlice = createSlice({
       });
   },
 });
+export const { clearStore } = chatSlice.actions;
 
 const rootReducer = combineReducers({
   chat: chatSlice.reducer,
