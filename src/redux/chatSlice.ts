@@ -58,7 +58,7 @@ const chatSlice = createSlice({
       .addCase(createChatAsync.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = action.payload;
-        localStorage.setItem("userInfo", JSON.stringify(action.payload));
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(createChatAsync.rejected, (state, action) => {
         state.isLoading = false;
