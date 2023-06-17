@@ -17,8 +17,6 @@ interface Participant {
 }
 interface chatState {
   _id?: string;
-  chatName: string;
-  isGroupChat: boolean;
   participants: Participant[];
   isLoading: boolean;
   error: string | null;
@@ -33,8 +31,6 @@ const initialState: chatState = {
   isLoading: false,
   error: null,
   msg: null,
-  chatName: "",
-  isGroupChat: false,
 };
 
 export const createChatAsync = createAsyncThunk(
