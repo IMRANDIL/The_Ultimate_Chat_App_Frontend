@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { fetchChatsAsync } from "../../redux/chatSlice";
-import { useDispatch } from "react-redux";
-import { Box } from "@chakra-ui/react";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, Stack, Text } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
+import { getSender } from "../../utils/utils";
+import Loader from "../Loader";
+import { RootState } from "../../redux/authSlice";
 
 const MyChats: React.FC = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
+  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
 
   const dispatch = useDispatch();
 
@@ -79,7 +83,32 @@ const MyChats: React.FC = () => {
           borderRadius={"lg"}
           overflow={"hidden"}
         >
-          {chats ? <h1>Love</h1> : <ChatLoading />}
+          {isLoading && <ChatLoading />}
+          {chats ? (
+            <Stack overflowY={"scroll"}>
+              {chats &&
+                chats.map((chat) => (
+                  <Box
+                    onClick={() => setSelectedChat(chat)}
+                    cursor={"pointer"}
+                    px={3}
+                    py={2}
+                    borderRadius={"lg"}
+                    key={chat._id}
+                    bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
+                    color={selectedChat === chat ? "white" : "black"}
+                  >
+                    <Text>
+                      {!chat.isGroupChat
+                        ? getSender(chat.participants)
+                        : chat.chatName}
+                    </Text>
+                  </Box>
+                ))}
+            </Stack>
+          ) : (
+            <ChatLoading />
+          )}
         </Box>
       </Box>
     </>
