@@ -27,17 +27,19 @@ import { toast } from "react-toastify";
 import { getAllUserAsync } from "../../redux/authSlice";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "./UserListItem";
-import { createChatAsync } from "../../redux/chatSlice";
+import { createChatAsync, fetchChatsAsync } from "../../redux/chatSlice";
 import Loader from "../Loader";
 
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [selectedChat, setSelectedChat] = useState([]);
   // const [loading, setLoading] = useState(false);
   // const [loadingChat, setLoadingChat] = useState();
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
+  const { fetchChats } = useSelector((state: RootState) => state.chat.chat);
   const dispatch: any = useDispatch();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const navigate = useNavigate();
@@ -87,7 +89,8 @@ const SideDrawer: React.FC = () => {
     try {
       const response = await dispatch(createChatAsync({ participantId }));
       if (response && response.payload) {
-        console.log(response.payload);
+        await dispatch(fetchChatsAsync());
+        setSelectedChat(response.payload);
         onClose();
       } else {
         toast.error(response.error.message);

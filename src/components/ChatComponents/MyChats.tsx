@@ -13,7 +13,7 @@ const MyChats: React.FC = () => {
       try {
         const response = await dispatch(fetchChatsAsync());
         if (response && response.payload) {
-          setChats(response.data);
+          setChats(response.payload);
         } else {
           toast.error(response.error.message);
         }
