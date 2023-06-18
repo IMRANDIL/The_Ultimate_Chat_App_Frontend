@@ -109,12 +109,18 @@ const PrivateHandler: React.FC = (props: any) => {
       }
     };
 
+    const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+    const loggedInAt = new Date(userInfo.loggedInAt).getTime();
+    const currentTime = new Date().getTime();
+    const timeDiff = currentTime - loggedInAt;
+    const initialDelay = Math.max(0, 55 * 60 * 1000 - timeDiff);
+
     const interval = setInterval(refreshAccessToken, 55 * 60 * 1000);
 
-    // Call the function immediately to refresh access token
-    refreshAccessToken();
+    // Call the function immediately to refresh access token after initial delay
+    setTimeout(refreshAccessToken, initialDelay);
 
-    //clean up
+    // Clean up the interval when the component unmounts or when the `userInfo.loggedInAt` changes.
     return () => {
       clearInterval(interval);
     };
