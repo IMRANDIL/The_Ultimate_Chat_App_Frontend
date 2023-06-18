@@ -21,6 +21,7 @@ const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
+  const [selectedGroupChat, setSelectedGroupChat] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
 
@@ -62,13 +63,32 @@ const GroupChatModal: React.FC = ({ children }) => {
       } else {
         return;
       }
-    }, 700); // Adjust the delay (in milliseconds) according to your needs
+    }, 300); // Adjust the delay (in milliseconds) according to your needs
   };
   const hanldeSubmit = () => {};
 
+  useEffect(() => {
+    // Retrieve the selectedChat data from localStorage when the component mounts
+    const storedChat = localStorage.getItem("selectedGroupChat");
+    const parsedChat = storedChat ? JSON.parse(storedChat) : [];
+    setSelectedGroupChat(parsedChat);
+  }, []);
+
   const handleGroup = (user: any) => {
-    console.log(user);
+    if (selectedGroupChat.includes(user)) {
+      toast.error("user already added");
+    } else {
+      setSelectedGroupChat([...selectedGroupChat, user]);
+    }
   };
+
+  useEffect(() => {
+    // Store the selectedChat value in local storage
+    localStorage.setItem(
+      "selectedGroupChat",
+      JSON.stringify(selectedGroupChat)
+    );
+  }, [selectedGroupChat]);
 
   return (
     <>

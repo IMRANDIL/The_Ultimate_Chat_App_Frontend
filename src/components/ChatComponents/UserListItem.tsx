@@ -4,14 +4,14 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/authSlice";
 import Loader from "../Loader";
 
-const UserListItem: React.FC = ({ user, handleChatCreation }) => {
+const UserListItem: React.FC = ({ user, handleFunction }) => {
   const { isLoading } = useSelector((state: RootState) => state.chat.chat);
 
   return (
     <>
       {isLoading && <Loader />}
       <Box
-        onClick={handleChatCreation}
+        onClick={handleFunction}
         cursor={"pointer"}
         bg={"#E8E8E8"}
         _hover={{

@@ -38,8 +38,6 @@ const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
-  // const [loading, setLoading] = useState(false);
-  // const [loadingChat, setLoadingChat] = useState();
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
@@ -186,7 +184,7 @@ const SideDrawer: React.FC = () => {
                 <UserListItem
                   key={result._id}
                   user={result}
-                  handleChatCreation={() => accessChat(result._id)}
+                  handleFunction={() => accessChat(result._id)}
                 />
               ))}
           </DrawerBody>
