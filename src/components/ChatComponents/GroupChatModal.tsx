@@ -11,10 +11,11 @@ import {
   Input,
   ModalFooter,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
-import { getAllUserAsync } from "../../redux/authSlice";
+import { RootState, getAllUserAsync } from "../../redux/authSlice";
+import UserListItem from "./UserListItem";
 
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
@@ -24,6 +25,14 @@ const GroupChatModal: React.FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchResult([]); // Reset search result when the drawer is closed
+      setSearch("");
+    }
+  }, [isOpen]);
 
   const handleSearch = async (query: string) => {
     // Clear any previous timeout
@@ -56,6 +65,8 @@ const GroupChatModal: React.FC = ({ children }) => {
     }, 700); // Adjust the delay (in milliseconds) according to your needs
   };
   const hanldeSubmit = () => {};
+
+  const handleGroup = (user: any) => {};
 
   return (
     <>
@@ -94,7 +105,19 @@ const GroupChatModal: React.FC = ({ children }) => {
               />
             </FormControl>
             {/* selected users */}
-            {/* render search user */}
+            {isLoading ? (
+              <p>Loading...</p>
+            ) : (
+              searchResult
+                ?.slice(0, 4)
+                .map((result: any) => (
+                  <UserListItem
+                    key={result._id}
+                    user={result}
+                    handleFunction={() => handleGroup(result)}
+                  />
+                ))
+            )}
           </ModalBody>
           <ModalFooter>
             <Button color={"blue"} onSubmit={hanldeSubmit}>
