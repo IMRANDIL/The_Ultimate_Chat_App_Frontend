@@ -10,6 +10,7 @@ import {
   FormControl,
   Input,
   ModalFooter,
+  Box,
 } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,6 +86,12 @@ const GroupChatModal: React.FC = ({ children }) => {
     }
   };
 
+  const handleDelete = (delUser) => {
+    setSelectedGroupChat((prevGroupChat) =>
+      prevGroupChat.filter((selectUser) => selectUser._id !== delUser._id)
+    );
+  };
+
   useEffect(() => {
     // Store the selectedChat value in local storage
     localStorage.setItem(
@@ -129,13 +136,17 @@ const GroupChatModal: React.FC = ({ children }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            {selectedGroupChat &&
-              selectedGroupChat.map((selectedUser) => (
-                <UserBadgeItem
-                  key={selectedUser._id}
-                  selectedUser={selectedUser}
-                />
-              ))}
+            <Box display={"flex"} flexWrap={"wrap"} flexDirection={"row"}>
+              {selectedGroupChat &&
+                selectedGroupChat.map((selectedUser) => (
+                  <UserBadgeItem
+                    key={selectedUser._id}
+                    selectedUser={selectedUser}
+                    handleFunction={() => handleDelete(selectedUser)}
+                  />
+                ))}
+            </Box>
+
             {isLoading ? (
               <p>Loading...</p>
             ) : (
