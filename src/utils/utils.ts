@@ -11,10 +11,13 @@ export const isPasswordValid = (password: string) => {
   return regex.test(password);
 };
 
-export const getSender = (participants: any) => {
+export const getSender = (chat: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
-  const filteredArray = participants.filter(
-    (participant) => participant._id !== userInfo && userInfo.id
+  // Find the participant who is not the logged-in user
+  const sender = chat.participants.find(
+    (participant: any) => participant._id !== (userInfo && userInfo.id)
   );
-  return filteredArray[0].username;
+
+  // Return the username of the sender, or an empty string if not found
+  return sender && sender.username;
 };
