@@ -13,7 +13,9 @@ import { getSender } from "../../utils/utils";
 const MyChats: React.FC = () => {
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
-  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
+  const { isLoading, fetchChats } = useSelector(
+    (state: RootState) => state.chat.chat
+  );
 
   const dispatch = useDispatch();
 
@@ -89,10 +91,10 @@ const MyChats: React.FC = () => {
           overflow={"hidden"}
         >
           {isLoading && <ChatLoading />}
-          {chats ? (
+          {fetchChats ? (
             <Stack overflowY={"scroll"}>
-              {chats &&
-                chats.map((chat: any) => {
+              {fetchChats &&
+                fetchChats.map((chat: any) => {
                   const sender = getSender(chat); // Call getSender only once
 
                   return (

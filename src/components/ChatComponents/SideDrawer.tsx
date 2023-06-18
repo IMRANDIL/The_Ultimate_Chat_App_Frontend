@@ -102,7 +102,11 @@ const SideDrawer: React.FC = () => {
           (c: any) => c._id === response.payload._id
         );
         if (!isChatExists) {
-          await dispatch(fetchChatsAsync());
+          try {
+            await dispatch(fetchChatsAsync());
+          } catch (error: any) {
+            toast.error(error.message);
+          }
         }
 
         setSelectedChat(response.payload);
