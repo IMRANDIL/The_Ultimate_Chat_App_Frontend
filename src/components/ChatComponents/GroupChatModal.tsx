@@ -12,12 +12,31 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
 
-  const handleSearch = () => {};
+  const handleSearch = async (query: string) => {
+    setSearch(query);
+    if (!query) return;
+    try {
+      const response = await dispatch(getAllUserAsync({ search }));
+      if (response && response.payload) {
+        setSearchResult(response.payload.data);
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   const hanldeSubmit = () => {};
 
