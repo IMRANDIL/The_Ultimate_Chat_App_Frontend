@@ -31,6 +31,9 @@ const MyChats: React.FC = () => {
         const response = await dispatch(fetchChatsAsync());
         if (response && response.payload) {
           setChats(response.payload);
+        } else if (
+          response.error.message === "Authorization Failed, No Token"
+        ) {
         } else {
           toast.error(response.error.message);
         }
