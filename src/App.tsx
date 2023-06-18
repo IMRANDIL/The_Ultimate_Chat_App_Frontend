@@ -113,7 +113,7 @@ const PrivateHandler: React.FC = (props: any) => {
       setAccessToken();
     };
 
-    const interval = setInterval(refreshAccessToken, 3300000);
+    const interval = setInterval(refreshAccessToken, 10 * 60 * 1000);
 
     // Clean up the interval when the component unmounts or when the `userInfo.loggedInAt` changes.
     return () => {
