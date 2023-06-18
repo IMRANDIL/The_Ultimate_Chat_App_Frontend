@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import UserListItem from "./UserListItem";
+import UserBadgeItem from "./UserBadgeItem";
 
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
@@ -75,8 +76,10 @@ const GroupChatModal: React.FC = ({ children }) => {
   }, []);
 
   const handleGroup = (user: any) => {
-    if (selectedGroupChat.includes(user)) {
-      toast.error("user already added");
+    if (
+      selectedGroupChat.some((selectedUser) => selectedUser._id === user._id)
+    ) {
+      toast.error("User already added");
     } else {
       setSelectedGroupChat([...selectedGroupChat, user]);
     }
@@ -126,7 +129,13 @@ const GroupChatModal: React.FC = ({ children }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            {/* selected users */}
+            {selectedGroupChat &&
+              selectedGroupChat.map((selectedUser) => (
+                <UserBadgeItem
+                  key={selectedUser._id}
+                  selectedUser={selectedUser}
+                />
+              ))}
             {isLoading ? (
               <p>Loading...</p>
             ) : (
