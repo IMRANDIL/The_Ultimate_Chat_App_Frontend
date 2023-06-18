@@ -96,11 +96,11 @@ const PrivateHandler: React.FC = (props: any) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const setAccessToken = async () => {
+    const refreshAccessToken = async () => {
       try {
         const response = await dispatch(getAccessTokenAsync());
         if (response && response.payload) {
-          return response.payload;
+          // Access token refreshed successfully
         } else {
           toast.error(response.error.message);
         }
@@ -109,13 +109,12 @@ const PrivateHandler: React.FC = (props: any) => {
       }
     };
 
-    const refreshAccessToken = () => {
-      return setAccessToken();
-    };
-
     const interval = setInterval(refreshAccessToken, 55 * 60 * 1000);
 
-    // Clean up the interval when the component unmounts or when the `userInfo.loggedInAt` changes.
+    // Call the function immediately to refresh access token
+    refreshAccessToken();
+
+    //clean up
     return () => {
       clearInterval(interval);
     };
