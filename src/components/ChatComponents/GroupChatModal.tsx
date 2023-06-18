@@ -10,7 +10,7 @@ import {
   FormControl,
   Input,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
@@ -39,6 +39,14 @@ const GroupChatModal: React.FC = ({ children }) => {
             <FormControl>
               <Input
                 placeholder="chat name"
+                mb={3}
+                onChange={(e) => setGroupChatName(e.target.value)}
+              />
+            </FormControl>
+
+            <FormControl>
+              <Input
+                placeholder="Add Users eg: Ali, Ram, Rahim"
                 mb={3}
                 onChange={(e) => setGroupChatName(e.target.value)}
               />

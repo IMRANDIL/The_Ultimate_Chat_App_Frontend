@@ -102,7 +102,7 @@ const PrivateHandler: React.FC = (props: any) => {
         if (response && response.payload) {
           // toast.success("set accessToken successful");
         } else {
-          // toast.error(response.error.message);
+          toast.error(response.error.message);
         }
       } catch (error: any) {
         toast.error(error.message);
@@ -119,7 +119,7 @@ const PrivateHandler: React.FC = (props: any) => {
     return () => {
       clearInterval(interval);
     };
-  }, [dispatch, userInfo]);
+  }, [dispatch]);
 
   if (userInfo && userInfo.email) {
     return props.children;
