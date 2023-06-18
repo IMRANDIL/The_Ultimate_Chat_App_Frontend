@@ -182,7 +182,7 @@ const SideDrawer: React.FC = () => {
             </Box>
             {isLoading && <ChatLoading />}
             {searchResult &&
-              searchResult.map((result) => (
+              searchResult.map((result: any) => (
                 <UserListItem
                   key={result._id}
                   user={result}

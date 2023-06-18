@@ -66,7 +66,9 @@ const GroupChatModal: React.FC = ({ children }) => {
   };
   const hanldeSubmit = () => {};
 
-  const handleGroup = (user: any) => {};
+  const handleGroup = (user: any) => {
+    console.log(user);
+  };
 
   return (
     <>
