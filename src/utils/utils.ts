@@ -14,7 +14,7 @@ export const isPasswordValid = (password: string) => {
 export const getSender = (participants: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const filteredArray = participants.filter(
-    (participant) => participant._id !== userInfo.id
+    (participant) => participant._id !== userInfo && userInfo.id
   );
   return filteredArray[0].username;
 };
