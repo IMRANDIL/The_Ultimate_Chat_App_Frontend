@@ -9,6 +9,7 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../../utils/utils";
 import Loader from "../Loader";
 import { RootState } from "../../redux/authSlice";
+import GroupChatModal from "./GroupChatModal";
 
 const MyChats: React.FC = () => {
   const [chats, setChats] = useState([]);
@@ -65,13 +66,15 @@ const MyChats: React.FC = () => {
           alignItems={"center"}
         >
           My Chats
-          <Button
-            display="flex"
-            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-            rightIcon={<AddIcon />}
-          >
-            New Group Chat
-          </Button>
+          <GroupChatModal>
+            <Button
+              display="flex"
+              fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+              rightIcon={<AddIcon />}
+            >
+              New Group Chat
+            </Button>
+          </GroupChatModal>
         </Box>
         <Box
           display={"flex"}
