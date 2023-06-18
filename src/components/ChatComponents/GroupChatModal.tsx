@@ -6,22 +6,44 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  ModalBody,
+  FormControl,
+  Input,
 } from "@chakra-ui/react";
 import React from "react";
-import { ModalBody } from "react-bootstrap";
 
 const GroupChatModal: React.FC = ({ children }) => {
+  const [groupChatName, setGroupChatName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
   return (
     <>
-      <Button onClick={onOpen}>{children}</Button>
+      <span onClick={onOpen}>{children}</span>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader
+            display={"flex"}
+            fontSize={"35px"}
+            fontFamily={"Work sans"}
+            justifyContent={"center"}
+          >
+            Create Group Chat
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>eeeeee</ModalBody>
+          <ModalBody
+            display={"flex"}
+            flexDirection={"column"}
+            alignItems={"center"}
+          >
+            <FormControl>
+              <Input
+                placeholder="chat name"
+                mb={3}
+                onChange={(e) => setGroupChatName(e.target.value)}
+              />
+            </FormControl>
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
