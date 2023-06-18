@@ -9,12 +9,18 @@ import {
   ModalBody,
   FormControl,
   Input,
+  ModalFooter,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleSearch = () => {};
+
+  const hanldeSubmit = () => {};
+
   return (
     <>
       <span onClick={onOpen}>{children}</span>
@@ -47,11 +53,18 @@ const GroupChatModal: React.FC = ({ children }) => {
             <FormControl>
               <Input
                 placeholder="Add Users eg: Ali, Ram, Rahim"
-                mb={3}
-                onChange={(e) => setGroupChatName(e.target.value)}
+                mb={1}
+                onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
+            {/* selected users */}
+            {/* render search user */}
           </ModalBody>
+          <ModalFooter>
+            <Button color={"blue"} onSubmit={hanldeSubmit}>
+              Create Chat
+            </Button>
+          </ModalFooter>
         </ModalContent>
       </Modal>
     </>
