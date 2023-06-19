@@ -13,8 +13,8 @@ import ForgotPasswordForm from "./screens/ForgotPassword";
 import ResetPasswordForm from "./screens/ResetPassword";
 import NotFound from "./screens/NotFound";
 import InternetConnectionNotAvailable from "./screens/InternetConnectionNotAvailable";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, getAccessTokenAsync, logout } from "./redux/authSlice";
+import { useDispatch } from "react-redux";
+import { getAccessTokenAsync, logout } from "./redux/authSlice";
 import { toast } from "react-toastify";
 import { clearStore } from "./redux/chatSlice";
 
