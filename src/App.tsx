@@ -114,7 +114,7 @@ const PrivateHandler: React.FC = (props: any) => {
     };
 
     const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
-    const loggedInAt = new Date(userInfo.loggedInAt).getTime();
+    const loggedInAt = new Date(userInfo?.loggedInAt).getTime();
     const currentTime = new Date().getTime();
     const timeDiff = currentTime - loggedInAt;
     const initialDelay = Math.max(0, 55 * 60 * 1000 - timeDiff);
