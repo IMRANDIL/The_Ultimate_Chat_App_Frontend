@@ -14,8 +14,9 @@ import ResetPasswordForm from "./screens/ResetPassword";
 import NotFound from "./screens/NotFound";
 import InternetConnectionNotAvailable from "./screens/InternetConnectionNotAvailable";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState, getAccessTokenAsync } from "./redux/authSlice";
+import { RootState, getAccessTokenAsync, logout } from "./redux/authSlice";
 import { toast } from "react-toastify";
+import { clearStore } from "./redux/chatSlice";
 
 const App: React.FC = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -101,6 +102,9 @@ const PrivateHandler: React.FC = (props: any) => {
         const response = await dispatch(getAccessTokenAsync());
         if (response && response.payload) {
           // Access token refreshed successfully
+        } else if (response.error.message === "Refresh token is required") {
+          dispatch(logout());
+          dispatch(clearStore());
         } else {
           toast.error(response.error.message);
         }
