@@ -37,7 +37,7 @@ import Loader from "../Loader";
 const SideDrawer: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
-  const [selectedChat, setSelectedChat] = useState([]);
+  // const [selectedChat, setSelectedChat] = useState([]);
 
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const { isLoading } = useSelector((state: RootState) => state.auth.auth);
@@ -89,10 +89,10 @@ const SideDrawer: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // Store the selectedChat value in local storage
-    localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
-  }, [selectedChat]);
+  // useEffect(() => {
+  //   // Store the selectedChat value in local storage
+  //   localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
+  // }, [selectedChat]);
 
   const accessChat = async (participantId: any) => {
     try {
@@ -109,7 +109,7 @@ const SideDrawer: React.FC = () => {
           }
         }
 
-        setSelectedChat(response.payload);
+        // setSelectedChat(response.payload);
         onClose();
       } else {
         toast.error(response.error.message);

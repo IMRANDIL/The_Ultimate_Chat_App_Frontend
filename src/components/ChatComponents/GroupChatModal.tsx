@@ -83,9 +83,9 @@ const GroupChatModal: React.FC = ({ children }) => {
         })
       );
       if (response && response.payload) {
+        onClose();
         toast.success(`${groupChatName} chat group created!`);
         await dispatch(fetchChatsAsync());
-        onClose();
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);

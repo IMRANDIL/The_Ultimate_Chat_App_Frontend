@@ -11,8 +11,7 @@ import GroupChatModal from "./GroupChatModal";
 import { getSender } from "../../utils/utils";
 
 const MyChats: React.FC = () => {
-  const [chats, setChats] = useState([]);
-  const [selectedChat, setSelectedChat] = useState([]);
+  const [selectedChat, setSelectedChat] = useState(null);
   const { isLoading, fetchChats } = useSelector(
     (state: RootState) => state.chat.chat
   );
@@ -20,19 +19,10 @@ const MyChats: React.FC = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Retrieve the selectedChat value from local storage
-    const storedSelectedChat = localStorage.getItem("selectedChat");
-    if (storedSelectedChat) {
-      setSelectedChat(JSON.parse(storedSelectedChat));
-    }
-  }, []);
-
-  useEffect(() => {
     const fetchChats = async () => {
       try {
         const response = await dispatch(fetchChatsAsync());
         if (response && response.payload) {
-          setChats(response.payload);
         } else if (
           response.error.message === "Authorization Failed, No Token"
         ) {
