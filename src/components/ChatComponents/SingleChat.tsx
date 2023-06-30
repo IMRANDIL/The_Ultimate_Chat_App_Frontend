@@ -22,6 +22,11 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat(null)}
             />
+            {!selectedChat.isGroupChat ? (
+              <></>
+            ) : (
+              <>{selectedChat.chatName.toUpperCase()}</>
+            )}
           </Text>
         </>
       ) : (
