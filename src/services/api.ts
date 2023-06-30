@@ -130,7 +130,12 @@ export const createGroupChat = async (name: string, participants: []) => {
   try {
     const response = await axiosInstance.post(
       `/chats/group`,
-      { name: name, participants: JSON.stringify(participants) },
+      {
+        name: name,
+        participants: JSON.stringify(
+          participants.map((participant) => participant._id)
+        ),
+      },
       {
         withCredentials: true,
       }
