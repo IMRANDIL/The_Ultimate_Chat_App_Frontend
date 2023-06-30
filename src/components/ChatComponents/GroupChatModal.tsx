@@ -67,7 +67,7 @@ const GroupChatModal: React.FC = ({ children }) => {
       }
     }, 300); // Adjust the delay (in milliseconds) according to your needs
   };
-  const hanldeSubmit = () => {
+  const handleSubmit = () => {
     if (!groupChatName || selectedGroupChat.length === 0) {
       return toast.error("Please add chat name and participants!");
     }
@@ -166,7 +166,7 @@ const GroupChatModal: React.FC = ({ children }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color={"blue"} onSubmit={hanldeSubmit}>
+            <Button color={"blue"} onClick={handleSubmit}>
               Create Chat
             </Button>
           </ModalFooter>
