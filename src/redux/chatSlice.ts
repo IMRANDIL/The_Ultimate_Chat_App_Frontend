@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { createChat, fetchChats } from "../services/api";
+import { createChat, createGroupChat, fetchChats } from "../services/api";
 
 interface Participant {
   _id: string;
@@ -19,6 +19,7 @@ interface chatState {
   _id?: string;
   selectedParticipants: Participant[];
   fetchChats: Participant[];
+  fetchGroupChats: Participant[];
   isLoading: boolean;
   error: string | null;
   msg?: string | null;
@@ -30,6 +31,7 @@ interface chatState {
 const initialState: chatState = {
   selectedParticipants: [],
   fetchChats: [],
+  fetchGroupChats: [],
   isLoading: false,
   error: null,
   msg: null,
@@ -55,6 +57,18 @@ export const fetchChatsAsync = createAsyncThunk("chat/fetchChat", async () => {
     throw error;
   }
 });
+
+export const createGroupChatAsync = createAsyncThunk(
+  "chat/createGroupChat",
+  async ({ name, participants }: { name: string; participants: [] }) => {
+    try {
+      const response = await createGroupChat(name, participants);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
 
 const chatSlice = createSlice({
   name: "chat",
@@ -99,6 +113,21 @@ const chatSlice = createSlice({
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(fetchChatsAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(createGroupChatAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(createGroupChatAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchGroupChats = action.payload;
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+      })
+      .addCase(createGroupChatAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
