@@ -93,20 +93,27 @@ const SideDrawer: React.FC = () => {
   //   // Store the selectedChat value in local storage
   //   localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
   // }, [selectedChat]);
-
   const accessChat = async (participantId: any) => {
+    const isParticipantExists = fetchChats.some((chat: any) =>
+      chat.participants.some(
+        (participant: any) => participant._id === participantId
+      )
+    );
+
+    if (isParticipantExists) {
+      // Participant already exists in a chat, handle accordingly
+      // For example, display an error message or take appropriate action
+      onClose();
+      return;
+    }
+
     try {
       const response = await dispatch(createChatAsync({ participantId }));
       if (response && response.payload) {
-        const isChatExists = fetchChats.find(
-          (c: any) => c._id === response.payload._id
-        );
-        if (!isChatExists) {
-          try {
-            await dispatch(fetchChatsAsync());
-          } catch (error: any) {
-            toast.error(error.message);
-          }
+        try {
+          await dispatch(fetchChatsAsync());
+        } catch (error: any) {
+          toast.error(error.message);
         }
 
         // setSelectedChat(response.payload);
