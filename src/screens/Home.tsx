@@ -24,7 +24,12 @@ const Home: React.FC = () => {
             setSelectedChat={setSelectedChat}
           />
         )}
-        {userInfo && <ChatBox selectedChat={selectedChat} />}
+        {userInfo && (
+          <ChatBox
+            selectedChat={selectedChat}
+            setSelectedChat={setSelectedChat}
+          />
+        )}
       </Box>
     </div>
   );

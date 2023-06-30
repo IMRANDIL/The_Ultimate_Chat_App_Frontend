@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import React from "react";
 import SingleChat from "./SingleChat";
 
-const ChatBox: React.FC = ({ selectedChat }) => {
+const ChatBox: React.FC = ({ selectedChat, setSelectedChat }) => {
   return (
     <Box
       display={{ base: selectedChat ? "flex" : "none", md: "flex" }}
@@ -14,7 +14,10 @@ const ChatBox: React.FC = ({ selectedChat }) => {
       borderRadius={"lg"}
       borderWidth={"1px"}
     >
-      <SingleChat selectedChat={selectedChat} />
+      <SingleChat
+        selectedChat={selectedChat}
+        setSelectedChat={setSelectedChat}
+      />
     </Box>
   );
 };
