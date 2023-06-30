@@ -70,7 +70,7 @@ const MyChats: React.FC = () => {
           alignItems={"center"}
         >
           My Chats
-          <GroupChatModal chats={chats}>
+          <GroupChatModal>
             <Button
               display="flex"
               fontSize={{ base: "17px", md: "10px", lg: "17px" }}

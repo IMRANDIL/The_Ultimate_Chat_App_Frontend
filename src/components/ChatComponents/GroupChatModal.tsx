@@ -18,9 +18,9 @@ import { toast } from "react-toastify";
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import UserListItem from "./UserListItem";
 import UserBadgeItem from "./UserBadgeItem";
-import { createGroupChatAsync } from "../../redux/chatSlice";
+import { createGroupChatAsync, fetchChatsAsync } from "../../redux/chatSlice";
 
-const GroupChatModal: React.FC = ({ children, chats }) => {
+const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -77,10 +77,15 @@ const GroupChatModal: React.FC = ({ children, chats }) => {
 
     try {
       const response = await dispatch(
-        createGroupChatAsync({ groupChatName, selectedGroupChat })
+        createGroupChatAsync({
+          name: groupChatName,
+          participants: selectedGroupChat,
+        })
       );
       if (response && response.payload) {
-        console.log(response.payload);
+        toast.success(`${groupChatName} chat group created!`);
+        await dispatch(fetchChatsAsync());
+        onClose();
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);
