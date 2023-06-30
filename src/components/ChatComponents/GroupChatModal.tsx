@@ -188,7 +188,11 @@ const GroupChatModal: React.FC = ({ children }) => {
             )}
           </ModalBody>
           <ModalFooter>
-            <Button color={"blue"} onClick={handleSubmit}>
+            <Button
+              isDisabled={!groupChatName || selectedGroupChat.length === 0}
+              color={"blue"}
+              onClick={handleSubmit}
+            >
               Create Chat
             </Button>
           </ModalFooter>
