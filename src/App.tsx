@@ -124,7 +124,6 @@ const PrivateHandler: React.FC = (props: any) => {
     // Call the function immediately to refresh access token after initial delay
     setTimeout(refreshAccessToken, initialDelay);
 
-    // Clean up the interval when the component unmounts or when the `userInfo.loggedInAt` changes.
     return () => {
       clearInterval(interval);
     };
