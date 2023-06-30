@@ -18,8 +18,9 @@ import { toast } from "react-toastify";
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import UserListItem from "./UserListItem";
 import UserBadgeItem from "./UserBadgeItem";
+import { createGroupChatAsync } from "../../redux/chatSlice";
 
-const GroupChatModal: React.FC = ({ children }) => {
+const GroupChatModal: React.FC = ({ children, chats }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -34,6 +35,8 @@ const GroupChatModal: React.FC = ({ children }) => {
     if (!isOpen) {
       setSearchResult([]); // Reset search result when the drawer is closed
       setSearch("");
+      localStorage.removeItem("selectedGroupChat");
+      setSelectedGroupChat([]);
     }
   }, [isOpen]);
 
@@ -67,9 +70,23 @@ const GroupChatModal: React.FC = ({ children }) => {
       }
     }, 300); // Adjust the delay (in milliseconds) according to your needs
   };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!groupChatName || selectedGroupChat.length === 0) {
       return toast.error("Please add chat name and participants!");
+    }
+
+    try {
+      const response = await dispatch(
+        createGroupChatAsync({ groupChatName, selectedGroupChat })
+      );
+      if (response && response.payload) {
+        console.log(response.payload);
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 

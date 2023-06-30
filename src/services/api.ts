@@ -126,11 +126,11 @@ export const fetchChats = async () => {
   }
 };
 
-export const createGroupChat = async (chatName: string, participants: []) => {
+export const createGroupChat = async (name: string, participants: []) => {
   try {
     const response = await axiosInstance.post(
       `/chats/group`,
-      { name: chatName, participants: participants },
+      { name: name, participants: participants },
       {
         withCredentials: true,
       }
