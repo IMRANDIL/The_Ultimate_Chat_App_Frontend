@@ -10,8 +10,8 @@ import { RootState } from "../../redux/authSlice";
 import GroupChatModal from "./GroupChatModal";
 import { getSender } from "../../utils/utils";
 
-const MyChats: React.FC = () => {
-  const [selectedChat, setSelectedChat] = useState(null);
+const MyChats: React.FC = ({ selectedChat, setSelectedChat }) => {
+  // const [selectedChat, setSelectedChat] = useState(null);
   const { isLoading, fetchChats } = useSelector(
     (state: RootState) => state.chat.chat
   );
