@@ -14,7 +14,7 @@ const ChatBox: React.FC = ({ selectedChat }) => {
       borderRadius={"lg"}
       borderWidth={"1px"}
     >
-      <SingleChat />
+      <SingleChat selectedChat={selectedChat} />
     </Box>
   );
 };
