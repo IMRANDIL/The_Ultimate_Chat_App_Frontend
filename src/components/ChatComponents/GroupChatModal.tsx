@@ -67,7 +67,11 @@ const GroupChatModal: React.FC = ({ children }) => {
       }
     }, 300); // Adjust the delay (in milliseconds) according to your needs
   };
-  const hanldeSubmit = () => {};
+  const hanldeSubmit = () => {
+    if (!groupChatName || selectedGroupChat.length === 0) {
+      return toast.error("Please add chat name and participants!");
+    }
+  };
 
   useEffect(() => {
     // Retrieve the selectedChat data from localStorage when the component mounts
