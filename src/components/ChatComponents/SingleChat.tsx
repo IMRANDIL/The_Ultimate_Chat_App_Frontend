@@ -1,6 +1,6 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, FormControl, IconButton, Input, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
@@ -8,7 +8,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/authSlice";
 import Loader from "../Loader";
 import { toast } from "react-toastify";
-import { sendMessageAsync } from "../../redux/messageSlice";
+import {
+  fetchAllMessageAsync,
+  sendMessageAsync,
+} from "../../redux/messageSlice";
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
@@ -18,6 +21,30 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   );
 
   const dispatch = useDispatch();
+
+  const fetchAllMessages = async () => {
+    if (!selectedChat) return;
+    try {
+      setNewMessage("");
+      const response = await dispatch(
+        fetchAllMessageAsync({
+          chatId: selectedChat && selectedChat._id,
+        })
+      );
+      if (response && response.payload) {
+        setMessages(response.payload);
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllMessages();
+  }, [selectedChat]);
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
@@ -30,8 +57,6 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
           })
         );
         if (response && response.payload) {
-          console.log(response.payload);
-
           setMessages([...messages, response.payload]);
         } else if (
           response.error.message === "Authorization Failed, No Token"
