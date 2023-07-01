@@ -38,9 +38,12 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const dispatch = useDispatch();
 
   const { isLoading } = useSelector((state: RootState) => state.chat.chat);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+  const currentUser = selectedChat.participants.filter(
+    (currentU) => currentU._id === userInfo.id
+  );
 
   const handleRemove = async (participant) => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
     if (
       selectedChat.groupAdmin._id !== userInfo.id &&
       participant._id !== userInfo.id
@@ -57,7 +60,9 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
       );
 
       if (response && response.payload) {
-        setSelectedChat(response.payload);
+        participant._id === userInfo.id
+          ? setSelectedChat(null)
+          : setSelectedChat(response.payload);
         await dispatch(fetchChatsAsync());
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
@@ -99,7 +104,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
       toast.warning("User already in the group!");
       return;
     }
-    const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+
     if (selectedChat.groupAdmin._id !== userInfo.id) {
       toast.error("Only Admin can add the user!");
       return;
@@ -228,7 +233,10 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="red" onClick={() => handleRemove(user)}>
+            <Button
+              colorScheme="red"
+              onClick={() => handleRemove(currentUser[0])}
+            >
               Leave Group
             </Button>
           </ModalFooter>
