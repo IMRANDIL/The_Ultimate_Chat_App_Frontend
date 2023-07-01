@@ -85,6 +85,9 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
       );
 
       if (response && response.payload) {
+        setSelectedChat(response.payload);
+        setSearch("");
+        setSearchResult([]);
         await dispatch(fetchChatsAsync());
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
@@ -177,6 +180,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
               <Input
                 placeholder="Add user to group"
                 mb={1}
+                value={search}
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
