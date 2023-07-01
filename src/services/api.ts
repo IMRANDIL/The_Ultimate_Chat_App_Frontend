@@ -182,4 +182,25 @@ export const addToGroupChat = async (chatId: string, participantId: string) => {
   }
 };
 
+export const removeToGroupChat = async (
+  chatId: string,
+  participantId: string
+) => {
+  try {
+    const response = await axiosInstance.post(
+      `/chats/remove-from-group`,
+      {
+        chatId,
+        participantId,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

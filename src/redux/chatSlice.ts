@@ -8,6 +8,7 @@ import {
   createChat,
   createGroupChat,
   fetchChats,
+  removeToGroupChat,
   renameGroupChat,
 } from "../services/api";
 
@@ -106,6 +107,24 @@ export const addToChatGroupAsync = createAsyncThunk(
   }
 );
 
+export const removeToChatGroupAsync = createAsyncThunk(
+  "chat/removeToChatGroup",
+  async ({
+    chatId,
+    participantId,
+  }: {
+    chatId: string;
+    participantId: string;
+  }) => {
+    try {
+      const response = await removeToGroupChat(chatId, participantId);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -194,6 +213,21 @@ const chatSlice = createSlice({
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(addToChatGroupAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(removeToChatGroupAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(removeToChatGroupAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchGroupChats = action.payload;
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+      })
+      .addCase(removeToChatGroupAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

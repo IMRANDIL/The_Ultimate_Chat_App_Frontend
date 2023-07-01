@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addToChatGroupAsync,
   fetchChatsAsync,
+  removeToChatGroupAsync,
   renameChatGroupAsync,
 } from "../../redux/chatSlice";
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
@@ -37,7 +38,35 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const dispatch = useDispatch();
 
   const { isLoading } = useSelector((state: RootState) => state.chat.chat);
-  const handleRemove = (participant) => {};
+
+  const handleRemove = async (participant) => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+    if (
+      selectedChat.groupAdmin._id !== userInfo.id &&
+      participant._id !== userInfo.id
+    ) {
+      toast.error("Only Admin can remove the user!");
+      return;
+    }
+    try {
+      const response = await dispatch(
+        removeToChatGroupAsync({
+          chatId: selectedChat._id,
+          participantId: participant._id,
+        })
+      );
+
+      if (response && response.payload) {
+        setSelectedChat(response.payload);
+        await dispatch(fetchChatsAsync());
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   const handleRename = async () => {
     if (!groupChatName) return;
