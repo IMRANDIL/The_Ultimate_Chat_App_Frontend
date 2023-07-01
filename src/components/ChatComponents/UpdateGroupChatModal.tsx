@@ -18,9 +18,9 @@ import React, { useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { renameChatGroupAsync } from "../../redux/chatSlice";
+import { fetchChatsAsync, renameChatGroupAsync } from "../../redux/chatSlice";
 
-const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
+const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [search, setSearch] = useState("");
@@ -33,19 +33,26 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
   const handleRename = async () => {
     if (!groupChatName) return;
     try {
+      setRenameLoading(true);
       const response = await dispatch(
         renameChatGroupAsync({
           chatId: selectedChat._id,
           chatName: groupChatName,
         })
       );
+      setRenameLoading(false);
       if (response && response.payload) {
+        setSelectedChat(null);
+        onClose();
+        await dispatch(fetchChatsAsync());
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);
+        setRenameLoading(false);
       }
     } catch (error: any) {
       toast.error(error.message);
+      setRenameLoading(false);
     }
   };
 

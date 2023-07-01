@@ -33,7 +33,10 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
             ) : (
               <>
                 {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChatModal selectedChat={selectedChat} />
+                <UpdateGroupChatModal
+                  selectedChat={selectedChat}
+                  setSelectedChat={setSelectedChat}
+                />
               </>
             )}
           </Text>
