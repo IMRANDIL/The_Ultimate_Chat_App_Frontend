@@ -14,20 +14,25 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchChatsAsync, renameChatGroupAsync } from "../../redux/chatSlice";
+import { RootState, getAllUserAsync } from "../../redux/authSlice";
+import Loader from "../Loader";
+import UserListItem from "./UserListItem";
 
 const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [search, setSearch] = useState("");
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [renameLoading, setRenameLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
 
+  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
   const handleRemove = (participant) => {};
 
   const handleRename = async () => {
@@ -56,7 +61,46 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
     }
   };
 
-  const handleSearch = (e) => {};
+  const handleAddUser = (user1) => {
+    if (selectedChat.participants.find((u) => u._id === user1._id)) {
+      toast.warning("User already in the group!");
+    }
+    const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+    if (selectedChat.groupAdmin._id !== userInfo.id) {
+      toast.error("Only Admin can add the user!");
+    }
+  };
+
+  const handleSearch = async (query: string) => {
+    // Clear any previous timeout
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+
+    setSearch(query.trim());
+
+    // Set a new timer to execute the search logic after a specified delay
+    timerRef.current = setTimeout(async () => {
+      if (search.trim()) {
+        try {
+          const response = await dispatch(getAllUserAsync({ search }));
+          if (response && response.payload) {
+            setSearchResult(response.payload.data);
+          } else if (
+            response.error.message === "Authorization Failed, No Token"
+          ) {
+            // Handle authorization failure
+          } else {
+            toast.error(response.error.message);
+          }
+        } catch (error: any) {
+          toast.error(error.message);
+        }
+      } else {
+        return;
+      }
+    }, 300); // Adjust the delay (in milliseconds) according to your needs
+  };
 
   return (
     <>
@@ -112,6 +156,18 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
+
+            {isLoading ? (
+              <Loader />
+            ) : (
+              searchResult?.map((result: any) => (
+                <UserListItem
+                  key={result._id}
+                  user={result}
+                  handleFunction={() => handleAddUser(result)}
+                />
+              ))
+            )}
           </ModalBody>
 
           <ModalFooter>
