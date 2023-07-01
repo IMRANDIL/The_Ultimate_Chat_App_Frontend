@@ -14,7 +14,7 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
@@ -42,6 +42,13 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const currentUser = selectedChat.participants.filter(
     (currentU) => currentU._id === userInfo.id
   );
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchResult([]); // Reset search result when the drawer is closed
+      setSearch("");
+    }
+  }, [isOpen]);
 
   const handleRemove = async (participant) => {
     if (
