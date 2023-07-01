@@ -2,7 +2,9 @@ import { ViewIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  FormControl,
   IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -23,6 +25,8 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleRemove = (participant) => {};
+
+  const handleRename = () => {};
 
   return (
     <>
@@ -54,6 +58,23 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
                 />
               ))}
             </Box>
+            <FormControl>
+              <Input
+                placeholder="group chat name"
+                mb={3}
+                value={groupChatName}
+                onChange={(e) => setGroupChatName(e.target.value)}
+              />
+              <Button
+                variant={"solid"}
+                colorScheme="teal"
+                ml={1}
+                isLoading={renameLoading}
+                onClick={handleRename}
+              >
+                Update
+              </Button>
+            </FormControl>
           </ModalBody>
 
           <ModalFooter>
