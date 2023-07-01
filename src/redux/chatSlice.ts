@@ -4,6 +4,7 @@ import {
   combineReducers,
 } from "@reduxjs/toolkit";
 import {
+  addToGroupChat,
   createChat,
   createGroupChat,
   fetchChats,
@@ -87,6 +88,24 @@ export const renameChatGroupAsync = createAsyncThunk(
   }
 );
 
+export const addToChatGroupAsync = createAsyncThunk(
+  "chat/addToChatGroup",
+  async ({
+    chatId,
+    participantId,
+  }: {
+    chatId: string;
+    participantId: string;
+  }) => {
+    try {
+      const response = await addToGroupChat(chatId, participantId);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -160,6 +179,21 @@ const chatSlice = createSlice({
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(renameChatGroupAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(addToChatGroupAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(addToChatGroupAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchGroupChats = action.payload;
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+      })
+      .addCase(addToChatGroupAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

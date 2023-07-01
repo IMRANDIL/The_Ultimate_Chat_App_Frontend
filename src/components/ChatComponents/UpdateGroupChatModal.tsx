@@ -18,7 +18,11 @@ import React, { useRef, useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchChatsAsync, renameChatGroupAsync } from "../../redux/chatSlice";
+import {
+  addToChatGroupAsync,
+  fetchChatsAsync,
+  renameChatGroupAsync,
+} from "../../redux/chatSlice";
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import Loader from "../Loader";
 import UserListItem from "./UserListItem";
@@ -61,13 +65,33 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
     }
   };
 
-  const handleAddUser = (user1) => {
+  const handleAddUser = async (user1) => {
     if (selectedChat.participants.find((u) => u._id === user1._id)) {
       toast.warning("User already in the group!");
+      return;
     }
     const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
     if (selectedChat.groupAdmin._id !== userInfo.id) {
       toast.error("Only Admin can add the user!");
+      return;
+    }
+
+    try {
+      const response = await dispatch(
+        addToChatGroupAsync({
+          chatId: selectedChat._id,
+          participantId: user1._id,
+        })
+      );
+
+      if (response && response.payload) {
+        await dispatch(fetchChatsAsync());
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
     }
   };
 
