@@ -34,20 +34,22 @@ export const getSenderFull = (chat: any) => {
 };
 
 export const isSameSender = (messages, m, i, userId) => {
-  return (
+  const result =
     i < messages.length - 1 &&
     (messages[i + 1].sender._id !== m.sender._id ||
       messages[i + 1].sender._id === undefined) &&
-    messages[i].sender._id !== userId
-  );
+    messages[i].sender._id !== userId;
+
+  return result;
 };
 
 export const isLastMessage = (messages, i, userId) => {
-  return (
+  const result =
     i === messages.length - 1 &&
     messages[messages.length - 1].sender._id !== userId &&
-    messages[messages.length - 1].sender._id
-  );
+    messages[messages.length - 1].sender._id;
+
+  return result;
 };
 
 export const isSameSenderMargin = (messages, m, i, userId) => {
