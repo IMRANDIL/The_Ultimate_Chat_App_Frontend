@@ -45,7 +45,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
           </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Box>
+            <Box display={"flex"} w={"100%"} flexWrap={"wrap"} pb={3}>
               {selectedChat.participants.map((participant) => (
                 <UserBadgeItem
                   key={participant._id}
