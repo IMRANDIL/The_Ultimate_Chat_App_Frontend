@@ -3,7 +3,12 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { createChat, createGroupChat, fetchChats } from "../services/api";
+import {
+  createChat,
+  createGroupChat,
+  fetchChats,
+  renameGroupChat,
+} from "../services/api";
 
 interface Participant {
   _id: string;
@@ -70,6 +75,18 @@ export const createGroupChatAsync = createAsyncThunk(
   }
 );
 
+export const renameChatGroupAsync = createAsyncThunk(
+  "chat/renameChatGroup",
+  async ({ chatId, chatName }: { chatId: string; chatName: string }) => {
+    try {
+      const response = await renameGroupChat(chatId, chatName);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
 const chatSlice = createSlice({
   name: "chat",
   initialState,
@@ -128,6 +145,21 @@ const chatSlice = createSlice({
         // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
       })
       .addCase(createGroupChatAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(renameChatGroupAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(renameChatGroupAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchGroupChats = action.payload;
+        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+      })
+      .addCase(renameChatGroupAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

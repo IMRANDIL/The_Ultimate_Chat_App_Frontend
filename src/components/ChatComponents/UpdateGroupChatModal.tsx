@@ -16,6 +16,9 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import UserBadgeItem from "./UserBadgeItem";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { renameChatGroupAsync } from "../../redux/chatSlice";
 
 const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
   const [groupChatName, setGroupChatName] = useState("");
@@ -23,10 +26,28 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
   const [search, setSearch] = useState("");
   const [renameLoading, setRenameLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
 
   const handleRemove = (participant) => {};
 
-  const handleRename = () => {};
+  const handleRename = async () => {
+    if (!groupChatName) return;
+    try {
+      const response = await dispatch(
+        renameChatGroupAsync({
+          chatId: selectedChat._id,
+          chatName: groupChatName,
+        })
+      );
+      if (response && response.payload) {
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
 
   const handleSearch = (e) => {};
 
@@ -87,8 +108,8 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
+            <Button colorScheme="red" onClick={() => handleRemove(user)}>
+              Leave Group
             </Button>
           </ModalFooter>
         </ModalContent>

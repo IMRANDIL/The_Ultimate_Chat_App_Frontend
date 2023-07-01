@@ -146,4 +146,22 @@ export const createGroupChat = async (name: string, participants: []) => {
   }
 };
 
+export const renameGroupChat = async (chatId: string, chatName: string) => {
+  try {
+    const response = await axiosInstance.put(
+      `/chats/rename-group`,
+      {
+        chatId,
+        chatName,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;
