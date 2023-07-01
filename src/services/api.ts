@@ -221,4 +221,19 @@ export const sendMessage = async (chatId: string, content: string) => {
   }
 };
 
+export const fetchAllMessage = async (chatId: string) => {
+  try {
+    const response = await axiosInstance.get(
+      `/messages/${chatId}`,
+
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

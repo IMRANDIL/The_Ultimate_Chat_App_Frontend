@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import { sendMessage } from "../services/api";
+import { fetchAllMessage, sendMessage } from "../services/api";
 
 interface Participant {
   _id: string;
@@ -17,7 +17,8 @@ interface Participant {
 }
 interface messageState {
   _id?: string;
-  fetchmessages: Participant[];
+  fetchNewMessages: Participant[];
+  fetchAllMessages: Participant[];
   isLoading: boolean;
   error: string | null;
   msg?: string | null;
@@ -27,7 +28,8 @@ interface messageState {
 }
 
 const initialState: messageState = {
-  fetchmessages: [],
+  fetchNewMessages: [],
+  fetchAllMessages: [],
   isLoading: false,
   error: null,
   msg: null,
@@ -38,6 +40,18 @@ export const sendMessageAsync = createAsyncThunk(
   async ({ chatId, content }: { chatId: string; content: string }) => {
     try {
       const response = await sendMessage(chatId, content);
+      return response;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+);
+
+export const fetchAllMessageAsync = createAsyncThunk(
+  "message/fetchAllMessage",
+  async ({ chatId }: { chatId: string }) => {
+    try {
+      const response = await fetchAllMessage(chatId);
       return response;
     } catch (error: any) {
       throw error;
@@ -65,9 +79,23 @@ const messageSlice = createSlice({
       })
       .addCase(sendMessageAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.fetchmessages = action.payload;
+        state.fetchNewMessages = action.payload;
       })
       .addCase(sendMessageAsync.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.error.message as string;
+      });
+
+    builder
+      .addCase(fetchAllMessageAsync.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllMessageAsync.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.fetchAllMessages = action.payload;
+      })
+      .addCase(fetchAllMessageAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });

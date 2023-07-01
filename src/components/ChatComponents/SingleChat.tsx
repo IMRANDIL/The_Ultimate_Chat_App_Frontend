@@ -22,6 +22,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       try {
+        setNewMessage("");
         const response = await dispatch(
           sendMessageAsync({
             chatId: selectedChat._id,
@@ -29,7 +30,8 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
           })
         );
         if (response && response.payload) {
-          setNewMessage("");
+          console.log(response.payload);
+
           setMessages([...messages, response.payload]);
         } else if (
           response.error.message === "Authorization Failed, No Token"
