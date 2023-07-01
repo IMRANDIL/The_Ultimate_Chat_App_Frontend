@@ -1,11 +1,24 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { Box, IconButton, Text } from "@chakra-ui/react";
-import React from "react";
+import { Box, FormControl, IconButton, Input, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/authSlice";
+import Loader from "../Loader";
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const { isLoading } = useSelector(
+    (state: RootState) => state.message.message
+  );
+
+  const sendMessage = () => {};
+
+  const typingHandler = () => {};
+
   return (
     <>
       {selectedChat ? (
@@ -50,7 +63,16 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
             borderRadius={"lg"}
             overflowY={"hidden"}
           >
-            {/* Messages here */}
+            {isLoading ? <Loader /> : <div></div>}
+            <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+              <Input
+                placeholder="Enter a message..."
+                variant={"filled"}
+                bg={"#E0E0E0"}
+                onChange={typingHandler}
+                value={newMessage}
+              />
+            </FormControl>
           </Box>
         </>
       ) : (
