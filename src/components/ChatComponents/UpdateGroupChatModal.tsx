@@ -1,5 +1,6 @@
 import { ViewIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   IconButton,
   Modal,
@@ -11,10 +12,18 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
+import UserBadgeItem from "./UserBadgeItem";
 
-const UpdateGroupChatModal: React.FC = () => {
+const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
+  const [groupChatName, setGroupChatName] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+  const [search, setSearch] = useState("");
+  const [renameLoading, setRenameLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleRemove = (participant) => {};
+
   return (
     <>
       <IconButton
@@ -23,18 +32,34 @@ const UpdateGroupChatModal: React.FC = () => {
         display={{ base: "flex" }}
       />
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader
+            fontSize={"35px"}
+            fontFamily={"Work sans"}
+            display={"flex"}
+            justifyContent={"center"}
+          >
+            {selectedChat.chatName}
+          </ModalHeader>
           <ModalCloseButton />
-          <ModalBody>eeeeeee</ModalBody>
+          <ModalBody>
+            <Box>
+              {selectedChat.participants.map((participant) => (
+                <UserBadgeItem
+                  key={participant._id}
+                  selectedUser={participant}
+                  handleFunction={() => handleRemove(participant)}
+                />
+              ))}
+            </Box>
+          </ModalBody>
 
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Close
             </Button>
-            <Button variant="ghost">Secondary Action</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

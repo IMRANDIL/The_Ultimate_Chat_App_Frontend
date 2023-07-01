@@ -3,6 +3,7 @@ import { Box, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
 import ProfileModel from "./ProfileModel";
+import UpdateGroupChatModal from "./UpdateGroupChatModal";
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   return (
@@ -30,7 +31,10 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
                 <ProfileModel user={getSenderFull(selectedChat)} />
               </>
             ) : (
-              <>{selectedChat.chatName.toUpperCase()}</>
+              <>
+                {selectedChat.chatName.toUpperCase()}
+                <UpdateGroupChatModal selectedChat={selectedChat} />
+              </>
             )}
           </Text>
           <Box
