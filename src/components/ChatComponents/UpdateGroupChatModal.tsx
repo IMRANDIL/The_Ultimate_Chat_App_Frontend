@@ -28,7 +28,11 @@ import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import Loader from "../Loader";
 import UserListItem from "./UserListItem";
 
-const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
+const UpdateGroupChatModal: React.FC = ({
+  selectedChat,
+  setSelectedChat,
+  fetchAllMessages,
+}) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [search, setSearch] = useState("");
@@ -70,6 +74,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
         participant._id === userInfo.id
           ? setSelectedChat(null)
           : setSelectedChat(response.payload);
+        fetchAllMessages();
         await dispatch(fetchChatsAsync());
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {

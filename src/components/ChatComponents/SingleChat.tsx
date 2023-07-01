@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/authSlice";
 import Loader from "../Loader";
 import { toast } from "react-toastify";
+import "./styles.css";
 import {
   fetchAllMessageAsync,
   sendMessageAsync,
 } from "../../redux/messageSlice";
+import ScrollableChat from "./ScrollableChat";
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
@@ -104,6 +106,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
                 <UpdateGroupChatModal
                   selectedChat={selectedChat}
                   setSelectedChat={setSelectedChat}
+                  fetchAllMessages={fetchAllMessages}
                 />
               </>
             )}
@@ -119,7 +122,13 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
             borderRadius={"lg"}
             overflowY={"hidden"}
           >
-            {isLoading ? <Loader /> : <div></div>}
+            {isLoading ? (
+              <Loader />
+            ) : (
+              <div className="messages">
+                <ScrollableChat messages={messages} />
+              </div>
+            )}
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
               <Input
                 placeholder="Enter a message..."
