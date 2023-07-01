@@ -203,4 +203,22 @@ export const removeToGroupChat = async (
   }
 };
 
+export const sendMessage = async (chatId: string, content: string) => {
+  try {
+    const response = await axiosInstance.post(
+      `/messages`,
+      {
+        chatId,
+        content,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw error.response?.data?.error;
+  }
+};
+
 export default axiosInstance;

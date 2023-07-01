@@ -4,9 +4,11 @@ import React, { useState } from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/authSlice";
 import Loader from "../Loader";
+import { toast } from "react-toastify";
+import { sendMessageAsync } from "../../redux/messageSlice";
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
@@ -15,9 +17,35 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
     (state: RootState) => state.message.message
   );
 
-  const sendMessage = () => {};
+  const dispatch = useDispatch();
 
-  const typingHandler = () => {};
+  const sendMessage = async (event) => {
+    if (event.key === "Enter" && newMessage) {
+      try {
+        const response = await dispatch(
+          sendMessageAsync({
+            chatId: selectedChat._id,
+            content: newMessage,
+          })
+        );
+        if (response && response.payload) {
+          setNewMessage("");
+          setMessages([...messages, response.payload]);
+        } else if (
+          response.error.message === "Authorization Failed, No Token"
+        ) {
+        } else {
+          toast.error(response.error.message);
+        }
+      } catch (error: any) {
+        toast.error(error.message);
+      }
+    }
+  };
+
+  const typingHandler = (e: any) => {
+    setNewMessage(e.target.value);
+  };
 
   return (
     <>
@@ -56,6 +84,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
           <Box
             display={"flex"}
             flexDirection={"column"}
+            justifyContent={"flex-end"}
             p={3}
             bg="#E8E8E8"
             w={"100%"}

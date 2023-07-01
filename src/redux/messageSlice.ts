@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   combineReducers,
 } from "@reduxjs/toolkit";
-import {} from "../services/api";
+import { sendMessage } from "../services/api";
 
 interface Participant {
   _id: string;
@@ -33,11 +33,11 @@ const initialState: messageState = {
   msg: null,
 };
 
-export const createChatAsync = createAsyncThunk(
-  "chat/createChat",
-  async ({ participantId }: { participantId: string }) => {
+export const sendMessageAsync = createAsyncThunk(
+  "message/sendMessage",
+  async ({ chatId, content }: { chatId: string; content: string }) => {
     try {
-      const response = await createChat(participantId);
+      const response = await sendMessage(chatId, content);
       return response;
     } catch (error: any) {
       throw error;
@@ -59,16 +59,15 @@ const messageSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createChatAsync.pending, (state) => {
+      .addCase(sendMessageAsync.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(createChatAsync.fulfilled, (state, action) => {
+      .addCase(sendMessageAsync.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.selectedParticipants = action.payload;
-        // localStorage.setItem("chatInfo", JSON.stringify(action.payload));
+        state.fetchmessages = action.payload;
       })
-      .addCase(createChatAsync.rejected, (state, action) => {
+      .addCase(sendMessageAsync.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.error.message as string;
       });
