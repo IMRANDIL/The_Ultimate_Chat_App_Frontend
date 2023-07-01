@@ -49,6 +49,7 @@ const ProfileModel: React.FC = ({ user, children }) => {
             <Image
               borderRadius="full"
               boxSize={"150px"}
+              draggable={false}
               src={user && user.profilePic}
               alt={user && user.username}
             />
