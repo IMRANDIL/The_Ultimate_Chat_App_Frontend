@@ -33,6 +33,18 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
               <>{selectedChat.chatName.toUpperCase()}</>
             )}
           </Text>
+          <Box
+            display={"flex"}
+            flexDirection={"column"}
+            p={3}
+            bg="#E8E8E8"
+            w={"100%"}
+            h={"100%"}
+            borderRadius={"lg"}
+            overflowY={"hidden"}
+          >
+            {/* Messages here */}
+          </Box>
         </>
       ) : (
         <Box
