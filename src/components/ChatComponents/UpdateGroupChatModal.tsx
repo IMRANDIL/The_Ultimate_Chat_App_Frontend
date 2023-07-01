@@ -28,6 +28,8 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
 
   const handleRename = () => {};
 
+  const handleSearch = (e) => {};
+
   return (
     <>
       <IconButton
@@ -58,7 +60,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
                 />
               ))}
             </Box>
-            <FormControl>
+            <FormControl display={"flex"}>
               <Input
                 placeholder="group chat name"
                 mb={3}
@@ -74,6 +76,13 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat }) => {
               >
                 Update
               </Button>
+            </FormControl>
+            <FormControl>
+              <Input
+                placeholder="Add user to group"
+                mb={1}
+                onChange={(e) => handleSearch(e.target.value)}
+              />
             </FormControl>
           </ModalBody>
 
