@@ -40,7 +40,7 @@ const UpdateGroupChatModal: React.FC = ({ selectedChat, setSelectedChat }) => {
   const { isLoading } = useSelector((state: RootState) => state.chat.chat);
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const currentUser = selectedChat.participants.filter(
-    (currentU) => currentU._id === userInfo.id
+    (currentU) => currentU._id === (userInfo && userInfo.id)
   );
 
   useEffect(() => {
