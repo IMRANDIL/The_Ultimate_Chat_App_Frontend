@@ -24,9 +24,11 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [socketConnected, setSocketConnected] = useState(false);
   // const { isLoading } = useSelector(
   //   (state: RootState) => state.message.message
   // );
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   const dispatch = useDispatch();
 
@@ -60,6 +62,8 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
 
   useEffect(() => {
     socket = io(END_POINT);
+    socket.emit("setup", userInfo);
+    socket.on("connection", () => setSocketConnected(true));
   }, []);
 
   const sendMessage = async (event) => {
