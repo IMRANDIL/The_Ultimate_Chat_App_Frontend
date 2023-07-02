@@ -14,6 +14,11 @@ import {
   sendMessageAsync,
 } from "../../redux/messageSlice";
 import ScrollableChat from "./ScrollableChat";
+import { io } from "socket.io-client";
+
+const END_POINT = `http://localhost:5000`;
+
+let socket, selectedChatCompare;
 
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
@@ -52,6 +57,10 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   useEffect(() => {
     fetchAllMessages();
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket = io(END_POINT);
+  }, []);
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
