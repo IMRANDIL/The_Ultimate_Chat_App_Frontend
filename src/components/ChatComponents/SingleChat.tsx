@@ -2,12 +2,14 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, FormControl, IconButton, Input, Text } from "@chakra-ui/react";
 import React, { useEffect, useRef, useState } from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
+import Lottie from "lottie-react";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import { useDispatch, useSelector } from "react-redux";
 import Loader from "../Loader";
 import { toast } from "react-toastify";
 import "./styles.css";
+import animationData from "../../animations/77160-typing.json";
 import {
   fetchAllMessageAsync,
   sendMessageAsync,
@@ -67,7 +69,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   };
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
+    if (event.key === "Enter" && newMessage.trim()) {
       socket.emit("stop typing", selectedChat._id);
       try {
         setNewMessage("");
@@ -189,7 +191,21 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
               </div>
             )}
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
-              {isTyping ? <div>Loading....</div> : <></>}
+              {isTyping && (
+                <div style={{ width: 70, height: 70, marginBottom: 5 }}>
+                  <Lottie
+                    width={70}
+                    height={70}
+                    animationData={animationData}
+                    loop={true}
+                    autoplay={true}
+                    rendererSettings={{
+                      preserveAspectRatio: "xMidYMid slice",
+                    }}
+                  />
+                </div>
+              )}
+
               <Input
                 placeholder="Enter a message..."
                 ref={inputRef}
