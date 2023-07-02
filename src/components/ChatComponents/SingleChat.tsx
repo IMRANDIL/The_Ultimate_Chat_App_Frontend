@@ -34,6 +34,12 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   useEffect(() => {
     socket = io(END_POINT);
     socket.emit("setup", userInfo);
+    socket.on("connect", () => {
+      // Join the chat room after reconnecting
+      if (selectedChat) {
+        socket.emit("join chat", selectedChat._id);
+      }
+    });
     socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
