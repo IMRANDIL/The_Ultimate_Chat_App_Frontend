@@ -1,11 +1,10 @@
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { Box, FormControl, IconButton, Input, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getSender, getSenderFull } from "../../utils/utils";
 import ProfileModel from "./ProfileModel";
 import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../redux/authSlice";
 import Loader from "../Loader";
 import { toast } from "react-toastify";
 import "./styles.css";
@@ -17,13 +16,15 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 
 const END_POINT = `http://localhost:5000`;
-let socket, selectedChatCompare;
+let socket;
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
-
+  const inputRef = useRef<HTMLInputElement>(null); // Create a reference to the input field
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   const dispatch = useDispatch();
@@ -32,7 +33,8 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
     socket = io(END_POINT);
     socket.emit("setup", userInfo);
     socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
-
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
     return () => {
       // Cleanup function to disconnect the socket when the component unmounts
       socket.disconnect();
@@ -66,6 +68,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         setNewMessage("");
 
@@ -104,10 +107,32 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
 
   useEffect(() => {
     fetchAllMessages();
+    // Focus the input field when selectedChat changes
+    if (selectedChat && inputRef.current) {
+      inputRef.current.focus();
+    }
   }, [selectedChat]);
 
   const typingHandler = (e: any) => {
     setNewMessage(e.target.value);
+
+    //typing socket
+    if (!socketConnected) return;
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+
+    let lastTypingTime = new Date().getTime();
+    let timerLength = 3000;
+    setTimeout(() => {
+      let timeNow = new Date().getTime();
+      let timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -164,8 +189,10 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
               </div>
             )}
             <FormControl onKeyDown={sendMessage} isRequired mt={3}>
+              {isTyping ? <div>Loading....</div> : <></>}
               <Input
                 placeholder="Enter a message..."
+                ref={inputRef}
                 variant={"filled"}
                 bg={"#E0E0E0"}
                 onChange={typingHandler}
