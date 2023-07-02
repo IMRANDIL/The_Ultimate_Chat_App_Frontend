@@ -18,29 +18,34 @@ import ScrollableChat from "./ScrollableChat";
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const { isLoading } = useSelector(
-    (state: RootState) => state.message.message
-  );
+  const [loading, setLoading] = useState(false);
+  // const { isLoading } = useSelector(
+  //   (state: RootState) => state.message.message
+  // );
 
   const dispatch = useDispatch();
 
   const fetchAllMessages = async () => {
     if (!selectedChat) return;
     try {
-      setNewMessage("");
+      setLoading(true);
       const response = await dispatch(
         fetchAllMessageAsync({
           chatId: selectedChat && selectedChat._id,
         })
       );
       if (response && response.payload) {
+        setLoading(false);
         setMessages(response.payload);
       } else if (response.error.message === "Authorization Failed, No Token") {
+        setLoading(false);
       } else {
         toast.error(response.error.message);
+        setLoading(false);
       }
     } catch (error: any) {
       toast.error(error.message);
+      setLoading(false);
     }
   };
 
@@ -52,6 +57,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
     if (event.key === "Enter" && newMessage) {
       try {
         setNewMessage("");
+
         const response = await dispatch(
           sendMessageAsync({
             chatId: selectedChat._id,
@@ -122,7 +128,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
             borderRadius={"lg"}
             overflowY={"hidden"}
           >
-            {isLoading ? (
+            {loading ? (
               <Loader />
             ) : (
               <div className="messages">
