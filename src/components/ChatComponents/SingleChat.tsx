@@ -17,20 +17,27 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 
 const END_POINT = `http://localhost:5000`;
-
 let socket, selectedChatCompare;
-
 const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
-  // const { isLoading } = useSelector(
-  //   (state: RootState) => state.message.message
-  // );
+
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    socket = io(END_POINT);
+    socket.emit("setup", userInfo);
+    socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
+
+    return () => {
+      // Cleanup function to disconnect the socket when the component unmounts
+      socket.disconnect();
+    };
+  }, []);
 
   const fetchAllMessages = async () => {
     if (!selectedChat) return;
@@ -44,6 +51,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
       if (response && response.payload) {
         setLoading(false);
         setMessages(response.payload);
+        socket.emit("join chat", selectedChat._id);
       } else if (response.error.message === "Authorization Failed, No Token") {
         setLoading(false);
       } else {
@@ -55,16 +63,6 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    fetchAllMessages();
-  }, [selectedChat]);
-
-  useEffect(() => {
-    socket = io(END_POINT);
-    socket.emit("setup", userInfo);
-    socket.on("connection", () => setSocketConnected(true));
-  }, []);
 
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
@@ -78,6 +76,7 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
           })
         );
         if (response && response.payload) {
+          socket.emit("new message", response.payload);
           setMessages([...messages, response.payload]);
         } else if (
           response.error.message === "Authorization Failed, No Token"
@@ -90,6 +89,22 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
       }
     }
   };
+
+  useEffect(() => {
+    socket.on("message received", (newMessageReceived) => {
+      if (
+        !selectedChat || // if chat is not selected or doesn't match current chat
+        selectedChat._id !== newMessageReceived.chat._id
+      ) {
+      } else {
+        setMessages([...messages, newMessageReceived]);
+      }
+    });
+  });
+
+  useEffect(() => {
+    fetchAllMessages();
+  }, [selectedChat]);
 
   const typingHandler = (e: any) => {
     setNewMessage(e.target.value);
