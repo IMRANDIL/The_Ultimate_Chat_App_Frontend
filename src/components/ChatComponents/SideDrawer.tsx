@@ -152,13 +152,18 @@ const SideDrawer: React.FC = ({ notification, setNotification }) => {
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No new messages"}
-              {notification.map((notif) => (
-                <MenuItem key={notif._id}>
-                  {notif?.chat?.isGroupChat
-                    ? `New message in ${notif.chat.chatName}`
-                    : `New message from ${getSender(notif)}`}
-                </MenuItem>
-              ))}
+              {notification.map((notif) => {
+                console.log(notif);
+                const sender = getSender(notif.chat);
+
+                return (
+                  <MenuItem key={notif._id}>
+                    {notif?.chat?.isGroupChat
+                      ? `New message in ${notif.chat.chatName}`
+                      : `New message from ${sender}`}
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </Menu>
           <Menu>

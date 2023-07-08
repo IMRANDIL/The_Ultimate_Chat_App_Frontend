@@ -13,10 +13,13 @@ export const isPasswordValid = (password: string) => {
 
 export const getSender = (chat: any) => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
+
   // Find the participant who is not the logged-in user
-  const sender = chat.participants.find(
-    (participant: any) => participant._id !== (userInfo && userInfo.id)
-  );
+  const sender =
+    chat &&
+    chat.participants.find(
+      (participant: any) => participant._id !== (userInfo && userInfo.id)
+    );
 
   // Return the username of the sender, or an empty string if not found
   return sender && sender.username;

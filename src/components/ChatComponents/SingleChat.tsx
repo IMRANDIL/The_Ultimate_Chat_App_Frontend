@@ -18,7 +18,7 @@ import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
 
 const END_POINT = `http://localhost:5000`;
-let socket;
+let socket, selectedChatCompare;
 const SingleChat: React.FC = ({
   selectedChat,
   setSelectedChat,
@@ -107,11 +107,21 @@ const SingleChat: React.FC = ({
   };
 
   useEffect(() => {
+    fetchAllMessages();
+    // Focus the input field when selectedChat changes
+    selectedChatCompare = selectedChat;
+    if (selectedChat && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [selectedChat]);
+
+  useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
       if (
-        !selectedChat || // if chat is not selected or doesn't match current chat
-        selectedChat._id !== newMessageReceived.chat._id
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
+        console.log(newMessageReceived);
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
         }
@@ -120,14 +130,6 @@ const SingleChat: React.FC = ({
       }
     });
   });
-
-  useEffect(() => {
-    fetchAllMessages();
-    // Focus the input field when selectedChat changes
-    if (selectedChat && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [selectedChat]);
 
   const typingHandler = (e: any) => {
     setNewMessage(e.target.value);
