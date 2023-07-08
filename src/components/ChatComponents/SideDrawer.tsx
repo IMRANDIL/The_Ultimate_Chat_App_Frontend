@@ -96,14 +96,25 @@ const SideDrawer: React.FC = ({
   };
 
   const accessChat = async (participantId: any) => {
-    const isParticipantExists = fetchChats.some((chat: any) =>
-      chat.participants.some(
-        (participant: any) => participant._id === participantId
-      )
+    console.log(fetchChats);
+    const isParticipantExistsInGroup = fetchChats.some(
+      (chat: any) =>
+        chat.isGroupChat === true &&
+        chat.participants.some(
+          (participant: any) => participant._id === participantId
+        )
     );
 
-    if (isParticipantExists) {
-      // Participant already exists in a chat, handle accordingly
+    const isParticipantExistsInOneToOne = fetchChats.some(
+      (chat: any) =>
+        chat.isGroupChat === false &&
+        chat.participants.some(
+          (participant: any) => participant._id === participantId
+        )
+    );
+
+    if (isParticipantExistsInGroup && isParticipantExistsInOneToOne) {
+      // Participant already exists in a group chat, handle accordingly
       // For example, display an error message or take appropriate action
       onClose();
       return;
