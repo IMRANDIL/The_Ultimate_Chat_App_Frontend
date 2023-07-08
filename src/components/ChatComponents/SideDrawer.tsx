@@ -34,6 +34,7 @@ import {
 } from "../../redux/chatSlice";
 import Loader from "../Loader";
 import { getSender } from "../../utils/utils";
+import ReactBadge from "../ReactBadge";
 
 const SideDrawer: React.FC = ({
   notification,
@@ -152,7 +153,10 @@ const SideDrawer: React.FC = ({
         <div>
           <Menu>
             <MenuButton p={1}>
-              <BellIcon fontSize="2xl" m={1} />
+              <div style={{ position: "relative" }}>
+                <ReactBadge />
+                <BellIcon fontSize="2xl" m={1} />
+              </div>
             </MenuButton>
             <MenuList pl={2}>
               {!notification.length && "No new messages"}
