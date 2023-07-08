@@ -101,6 +101,38 @@ const UpdateGroupChatModal: React.FC = ({
     }
   };
 
+  const handleLeave = async (participant) => {
+    if (
+      selectedChat.groupAdmin._id !== userInfo.id &&
+      participant._id !== userInfo.id
+    ) {
+      toast.error("Only Admin can remove the user!");
+      return;
+    }
+    try {
+      const response = await dispatch(
+        removeToChatGroupAsync({
+          chatId: selectedChat._id,
+          participantId: participant._id,
+        })
+      );
+
+      if (response && response.payload) {
+        participant._id === userInfo.id
+          ? setSelectedChat(null)
+          : setSelectedChat(response.payload);
+        fetchAllMessages();
+        await dispatch(fetchChatsAsync());
+        socket.emit("groupChatLeft", fetchChats);
+      } else if (response.error.message === "Authorization Failed, No Token") {
+      } else {
+        toast.error(response.error.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
   const handleRename = async () => {
     if (!groupChatName) return;
     try {
@@ -265,7 +297,7 @@ const UpdateGroupChatModal: React.FC = ({
           <ModalFooter>
             <Button
               colorScheme="red"
-              onClick={() => handleRemove(currentUser[0])}
+              onClick={() => handleLeave(currentUser[0])}
             >
               Leave Group
             </Button>
