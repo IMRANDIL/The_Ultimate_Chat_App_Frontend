@@ -40,7 +40,7 @@ const SingleChat: React.FC = ({
   useEffect(() => {
     socket = io(END_POINT);
     socket.emit("setup", userInfo);
-    socket.on("connect", () => {
+    socket.on("connection", () => {
       // Join the chat room after reconnecting
       if (selectedChat) {
         socket.emit("setup", userInfo);
@@ -71,6 +71,13 @@ const SingleChat: React.FC = ({
         dispatch(fetchChatsAsync());
       }
     });
+
+    socket.on("group Creation", (chat) => {
+      if (chat) {
+        dispatch(fetchChatsAsync());
+      }
+    });
+
     socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));

@@ -19,7 +19,10 @@ import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import UserListItem from "./UserListItem";
 import UserBadgeItem from "./UserBadgeItem";
 import { createGroupChatAsync, fetchChatsAsync } from "../../redux/chatSlice";
+import { io } from "socket.io-client";
 
+const END_POINT = `http://localhost:5000`;
+let socket;
 const GroupChatModal: React.FC = ({ children }) => {
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
@@ -29,7 +32,9 @@ const GroupChatModal: React.FC = ({ children }) => {
   const dispatch = useDispatch();
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
+  const { isLoading, fetchChats } = useSelector(
+    (state: RootState) => state.chat.chat
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -39,6 +44,15 @@ const GroupChatModal: React.FC = ({ children }) => {
       setSelectedGroupChat([]);
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    socket = io(END_POINT);
+
+    return () => {
+      // Cleanup function to disconnect the socket when the component unmounts
+      socket.disconnect();
+    };
+  }, []);
 
   const handleSearch = async (query: string) => {
     // Clear any previous timeout
@@ -86,6 +100,7 @@ const GroupChatModal: React.FC = ({ children }) => {
         onClose();
         toast.success(`${groupChatName} chat group created!`);
         await dispatch(fetchChatsAsync());
+        socket.emit("groupChatCreation", fetchChats);
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);
