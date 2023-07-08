@@ -35,7 +35,11 @@ import {
 import Loader from "../Loader";
 import { getSender } from "../../utils/utils";
 
-const SideDrawer: React.FC = ({ notification, setNotification }) => {
+const SideDrawer: React.FC = ({
+  notification,
+  setNotification,
+  setSelectedChat,
+}) => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   // const [selectedChat, setSelectedChat] = useState([]);
@@ -153,11 +157,16 @@ const SideDrawer: React.FC = ({ notification, setNotification }) => {
             <MenuList pl={2}>
               {!notification.length && "No new messages"}
               {notification.map((notif) => {
-                console.log(notif);
                 const sender = getSender(notif.chat);
 
                 return (
-                  <MenuItem key={notif._id}>
+                  <MenuItem
+                    key={notif._id}
+                    onClick={() => {
+                      setNotification(notification.filter((n) => n !== notif));
+                      setSelectedChat(notif.chat);
+                    }}
+                  >
                     {notif?.chat?.isGroupChat
                       ? `New message in ${notif.chat.chatName}`
                       : `New message from ${sender}`}

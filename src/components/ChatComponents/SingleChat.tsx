@@ -128,7 +128,6 @@ const SingleChat: React.FC = ({
         !selectedChatCompare || // if chat is not selected or doesn't match current chat
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        console.log(newMessageReceived);
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
         }

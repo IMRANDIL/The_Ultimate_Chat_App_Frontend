@@ -15,6 +15,7 @@ const Home: React.FC = () => {
         <SideDrawer
           notification={notification}
           setNotification={setNotification}
+          setSelectedChat={setSelectedChat}
         />
       )}
       <Box
