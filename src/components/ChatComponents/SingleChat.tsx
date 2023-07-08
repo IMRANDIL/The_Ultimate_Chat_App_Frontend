@@ -19,7 +19,12 @@ import { io } from "socket.io-client";
 
 const END_POINT = `http://localhost:5000`;
 let socket;
-const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
+const SingleChat: React.FC = ({
+  selectedChat,
+  setSelectedChat,
+  notification,
+  setNotification,
+}) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -107,6 +112,9 @@ const SingleChat: React.FC = ({ selectedChat, setSelectedChat }) => {
         !selectedChat || // if chat is not selected or doesn't match current chat
         selectedChat._id !== newMessageReceived.chat._id
       ) {
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+        }
       } else {
         setMessages([...messages, newMessageReceived]);
       }
