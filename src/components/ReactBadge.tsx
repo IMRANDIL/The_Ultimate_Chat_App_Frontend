@@ -1,8 +1,8 @@
 import React from "react";
 import "./CustomBadge.css";
 
-const ReactBadge: React.FC = () => {
-  const notificationCount = 5; // Set the count dynamically based on your notifications
+const ReactBadge: React.FC = ({ notificationCount }) => {
+  // Set the count dynamically based on your notifications
 
   return (
     <div

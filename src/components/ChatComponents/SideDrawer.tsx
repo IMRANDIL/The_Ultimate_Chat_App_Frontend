@@ -154,7 +154,9 @@ const SideDrawer: React.FC = ({
           <Menu>
             <MenuButton p={1}>
               <div style={{ position: "relative" }}>
-                <ReactBadge />
+                {notification.length > 0 && (
+                  <ReactBadge notificationCount={notification.length} />
+                )}
                 <BellIcon fontSize="2xl" m={1} />
               </div>
             </MenuButton>
