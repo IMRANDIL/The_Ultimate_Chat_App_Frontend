@@ -7,10 +7,16 @@ import ChatBox from "../components/ChatComponents/ChatBox";
 const Home: React.FC = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [notification, setNotification] = useState([]);
 
   return (
     <div style={{ width: "100%" }}>
-      {userInfo && <SideDrawer />}
+      {userInfo && (
+        <SideDrawer
+          notification={notification}
+          setNotification={setNotification}
+        />
+      )}
       <Box
         display="flex"
         width="100%"
@@ -28,6 +34,8 @@ const Home: React.FC = () => {
           <ChatBox
             selectedChat={selectedChat}
             setSelectedChat={setSelectedChat}
+            notification={notification}
+            setNotification={setNotification}
           />
         )}
       </Box>

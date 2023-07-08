@@ -2,9 +2,12 @@ import { Box } from "@chakra-ui/react";
 import React, { useState } from "react";
 import SingleChat from "./SingleChat";
 
-const ChatBox: React.FC = ({ selectedChat, setSelectedChat }) => {
-  const [notification, setNotification] = useState([]);
-
+const ChatBox: React.FC = ({
+  selectedChat,
+  setSelectedChat,
+  notification,
+  setNotification,
+}) => {
   return (
     <Box
       display={{ base: selectedChat ? "flex" : "none", md: "flex" }}

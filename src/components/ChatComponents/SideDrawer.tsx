@@ -34,7 +34,7 @@ import {
 } from "../../redux/chatSlice";
 import Loader from "../Loader";
 
-const SideDrawer: React.FC = () => {
+const SideDrawer: React.FC = ({ notification, setNotification }) => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   // const [selectedChat, setSelectedChat] = useState([]);
@@ -89,10 +89,6 @@ const SideDrawer: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   // Store the selectedChat value in local storage
-  //   localStorage.setItem("selectedChat", JSON.stringify(selectedChat));
-  // }, [selectedChat]);
   const accessChat = async (participantId: any) => {
     const isParticipantExists = fetchChats.some((chat: any) =>
       chat.participants.some(
