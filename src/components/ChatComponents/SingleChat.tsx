@@ -42,6 +42,13 @@ const SingleChat: React.FC = ({
     socket.on("connect", () => {
       // Join the chat room after reconnecting
       if (selectedChat) {
+        socket.emit("setup", userInfo);
+        socket.emit("join chat", selectedChat._id);
+      }
+    });
+    socket.on("disconnect", () => {
+      if (selectedChat) {
+        socket.emit("setup", userInfo);
         socket.emit("join chat", selectedChat._id);
       }
     });
