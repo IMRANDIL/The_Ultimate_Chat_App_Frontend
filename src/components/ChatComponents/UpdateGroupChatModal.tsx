@@ -118,12 +118,13 @@ const UpdateGroupChatModal: React.FC = ({
       );
 
       if (response && response.payload) {
+        console.log(response.payload);
         participant._id === userInfo.id
           ? setSelectedChat(null)
           : setSelectedChat(response.payload);
         fetchAllMessages();
+        socket.emit("groupChatLeft", [response.payload]);
         await dispatch(fetchChatsAsync());
-        socket.emit("groupChatLeft", fetchChats);
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);

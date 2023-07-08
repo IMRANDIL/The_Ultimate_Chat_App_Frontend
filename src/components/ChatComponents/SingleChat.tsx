@@ -63,6 +63,7 @@ const SingleChat: React.FC = ({
     socket.on("participant Removed", (chat) => {
       if (chat) {
         dispatch(fetchChatsAsync());
+        setSelectedChat(null);
       }
     });
 
@@ -81,6 +82,7 @@ const SingleChat: React.FC = ({
     socket.on("group Left", (chat) => {
       if (chat) {
         dispatch(fetchChatsAsync());
+        setSelectedChat(null);
       }
     });
 
