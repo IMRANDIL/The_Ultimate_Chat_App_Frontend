@@ -65,6 +65,12 @@ const SingleChat: React.FC = ({
         dispatch(fetchChatsAsync());
       }
     });
+
+    socket.on("group Rename", (chat) => {
+      if (chat) {
+        dispatch(fetchChatsAsync());
+      }
+    });
     socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));

@@ -116,6 +116,7 @@ const UpdateGroupChatModal: React.FC = ({
         setSelectedChat(response.payload);
         setGroupChatName("");
         await dispatch(fetchChatsAsync());
+        socket.emit("groupRenamed", fetchChats);
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);
