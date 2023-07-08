@@ -33,6 +33,7 @@ import {
   fetchChatsAsync,
 } from "../../redux/chatSlice";
 import Loader from "../Loader";
+import { getSender } from "../../utils/utils";
 
 const SideDrawer: React.FC = ({ notification, setNotification }) => {
   const [search, setSearch] = useState("");
@@ -149,6 +150,16 @@ const SideDrawer: React.FC = ({ notification, setNotification }) => {
             <MenuButton p={1}>
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
+            <MenuList pl={2}>
+              {!notification.length && "No new messages"}
+              {notification.map((notif) => (
+                <MenuItem key={notif._id}>
+                  {notif?.chat?.isGroupChat
+                    ? `New message in ${notif.chat.chatName}`
+                    : `New message from ${getSender(notif)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton p={1} as={Button} rightIcon={<ChevronDownIcon />}>
