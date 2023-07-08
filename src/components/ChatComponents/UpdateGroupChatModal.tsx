@@ -27,6 +27,10 @@ import {
 import { RootState, getAllUserAsync } from "../../redux/authSlice";
 import Loader from "../Loader";
 import UserListItem from "./UserListItem";
+import { io } from "socket.io-client";
+
+const END_POINT = `http://localhost:5000`;
+let socket;
 
 const UpdateGroupChatModal: React.FC = ({
   selectedChat,
@@ -41,11 +45,22 @@ const UpdateGroupChatModal: React.FC = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const dispatch = useDispatch();
 
-  const { isLoading } = useSelector((state: RootState) => state.chat.chat);
+  const { isLoading, fetchChats } = useSelector(
+    (state: RootState) => state.chat.chat
+  );
   const userInfo = JSON.parse(localStorage.getItem("userInfo") as string);
   const currentUser = selectedChat.participants.filter(
     (currentU) => currentU._id === (userInfo && userInfo.id)
   );
+
+  useEffect(() => {
+    socket = io(END_POINT);
+
+    return () => {
+      // Cleanup function to disconnect the socket when the component unmounts
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     if (!isOpen) {
@@ -76,6 +91,7 @@ const UpdateGroupChatModal: React.FC = ({
           : setSelectedChat(response.payload);
         fetchAllMessages();
         await dispatch(fetchChatsAsync());
+        socket.emit("participantRemoved", fetchChats);
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);
@@ -135,6 +151,7 @@ const UpdateGroupChatModal: React.FC = ({
         setSearch("");
         setSearchResult([]);
         await dispatch(fetchChatsAsync());
+        socket.emit("participantAdded", fetchChats);
       } else if (response.error.message === "Authorization Failed, No Token") {
       } else {
         toast.error(response.error.message);

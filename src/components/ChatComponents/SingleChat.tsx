@@ -16,6 +16,7 @@ import {
 } from "../../redux/messageSlice";
 import ScrollableChat from "./ScrollableChat";
 import { io } from "socket.io-client";
+import { fetchChatsAsync } from "../../redux/chatSlice";
 
 const END_POINT = `http://localhost:5000`;
 let socket, selectedChatCompare;
@@ -50,6 +51,18 @@ const SingleChat: React.FC = ({
       if (selectedChat) {
         socket.emit("setup", userInfo);
         socket.emit("join chat", selectedChat._id);
+      }
+    });
+
+    socket.on("participant Added", (chat) => {
+      if (chat) {
+        dispatch(fetchChatsAsync());
+      }
+    });
+
+    socket.on("participant Removed", (chat) => {
+      if (chat) {
+        dispatch(fetchChatsAsync());
       }
     });
     socket.on("connected", () => setSocketConnected(true)); // Change the event to "connected"
